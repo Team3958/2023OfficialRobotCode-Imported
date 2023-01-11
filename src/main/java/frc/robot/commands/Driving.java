@@ -38,7 +38,9 @@ public class Driving extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    dt.MechDrive(0, 0, 0, null);
+  }
 
   // Returns true when the command should end.
   @Override
