@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.Driving;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveTrain;
@@ -22,13 +23,12 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain m_dt = new DriveTrain();
   private final XboxController m_xc = new XboxController(Constants.XboxPort);
 
 
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final AutonomousCommand m_autoCommand = new AutonomousCommand(m_dt);
   private final Driving m_driving = new Driving(m_dt, m_xc);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -55,7 +55,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
     return m_autoCommand;
   }
 }

@@ -18,4 +18,14 @@ public final class Constants {
     public static final int frontright = 2;
     public static final int backright = 3;
     public static final int frontleft = 0;
-    public static final int XboxPort = 0;}
+    public static final int XboxPort = 0;
+
+    /*
+     * The idea with this is that we line up facing one of the APRIL Tags at the start of each game
+     * Set to 1 for Tags 1 and 6
+     * Set to 2 for Tags 2 and 7
+     * Set to 3 for Tags 3 and 8
+     */
+    public static final int AutonomousRoutine = 1; 
+    
+}
