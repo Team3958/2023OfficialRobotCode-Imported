@@ -14,11 +14,11 @@ public class AutonomousCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final DriveTrain dt;
   private int routineNumber;
-  private int tick = Robot.tick; 
+  private double tick = Robot.tick; 
   /*
     ^^ goofy wacky stuff going on here. tick increments every time auton periodic is called in Robot.
     That value is used to calcluate what should be the speeds needed to drive the robot along the curve
-    defined in path().
+    defined in path(), x(), and y().
   */
   /**
    * Creates a new ExampleCommand.
@@ -39,12 +39,10 @@ public class AutonomousCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    switch(routineNumber){
-      case 1: // driving commands to be figured out
-      case 2: // driving commands to be figured out
-      case 3: // driving commands to be figured out
-    }
+    double[] fromPath = path();
+    double y = fromPath[0]; // gotta swap x and y?
+    double x = fromPath[1];
+    dt.MechDrive(x, y, 0, dt.geRotation2d()); // idk what to do for z
   }
 
   // Called once the command ends or is interrupted.
@@ -60,20 +58,37 @@ public class AutonomousCommand extends CommandBase {
   }
 
   /*
-   * path is a parametric function that describes a curve, the path the robot wants to move on the field
-   * feed it 
+   * path() is used to describe different bezier curves
+   * the general equation of the curve is defined in x() and y()
    */
-  private int[] path() {
-    int t = tick;
-    int[] returns = new int[2];
+  private double[] path() {
+    double[] returns = new double[2];
     switch(routineNumber) {
-      case 1: returns[0] = 0; // x component for routine 1
-              returns[1] = 0; // y component for routine 1
-      case 2: returns[0] = 0; // x component for routine 2
-              returns[1] = 0; // y component for routine 2
-      case 3: returns[0] = 0; // x component for routine 3
-              returns[1] = 0; // y component for routine 3
+      case 1: returns[0] = x(0, 548, 548, tick + 1.0/350.0) - x(0, 548, 548, tick); // "dx" component for routine 1
+              returns[1] = y(445, 547, 275, tick + 1.0/350.0) - y(445, 547, 275, tick); // "dy" component for routine 1
+      case 2: returns[0] = 0; // "dx" component for routine 2
+              returns[1] = 0; // "dy" component for routine 2
+      case 3: returns[0] = x(0, 548, 548, tick + 1.0/350.0) - x(0, 548, 548, tick); // "dx" component for routine 3
+              returns[1] = y(105, 52, 275, tick + 1.0/350.0) - y(105, 52, 275, tick); // "dy" component for routine 3
     }
+    // This is trying to use the step from one call of tick to the next, and unitize it
+    double magnitude = Math.sqrt(Math.pow(returns[0], 2) + Math.pow(returns[1], 2));
+
+    returns[0] = returns[0] / magnitude;
+    returns[1] = returns[1] / magnitude;
+
     return returns;
+  }
+  private double x(int x0, int x1, int x2, double tick) {
+    if (tick < 350) {
+      tick = tick / 350.0;
+    }
+    return Math.pow((1 - tick), 2) * x0 + 2 * (1 - tick) * tick * x1 + Math.pow(tick, 2) * x2;
+  }
+  private double y(int y0, int y1, int y2, double tick) {
+    if (tick < 350) {
+      tick = tick / 350.0;
+    }
+    return Math.pow((1 - tick), 2) * y0 + 2 * (1 - tick) * tick * y1 + Math.pow(tick, 2) * y2;
   }
 }
