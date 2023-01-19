@@ -39,10 +39,17 @@ public class AutonomousCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double[] fromPath = path();
-    double y = fromPath[0]; // gotta swap x and y?
-    double x = fromPath[1];
-    dt.MechDrive(x, y, 0, dt.geRotation2d()); // idk what to do for z
+    if (0 < tick && tick < 150) { // 150 is a guess, will be however many ticks to complete block placement
+      ; // This is where I will call the method to place the block
+    } else if (151 < tick && tick < 450) { // 450 also a guess
+      // driving to the middle of the field
+      double[] fromPath = path();
+      double x = fromPath[0]; // gotta swap x and y?
+      double y = fromPath[1];
+      dt.MechDrive(x, y, 0, dt.geRotation2d()); // drive along the path
+    } else { // rest of auton period is spent driving onto platform
+      ; // Method to drive onto platform
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -64,10 +71,11 @@ public class AutonomousCommand extends CommandBase {
   private double[] path() {
     double[] returns = new double[2];
     switch(routineNumber) {
-      case 1: returns[0] = x(0, 548, 548, tick + 1.0/350.0) - x(0, 548, 548, tick); // "dx" component for routine 1
-              returns[1] = y(445, 547, 275, tick + 1.0/350.0) - y(445, 547, 275, tick); // "dy" component for routine 1
+      case 1: returns[0] = x(0, 650, 710, tick + 1.0/350.0) - x(0, 650, 710, tick); // "dx" component for routine 1
+              returns[1] = y(445, 600, 275, tick + 1.0/350.0) - y(445, 600, 275, tick); // "dy" component for routine 1
       case 2: returns[0] = 0; // "dx" component for routine 2
               returns[1] = 0; // "dy" component for routine 2
+      // gotta find a new curve for case 3 atm
       case 3: returns[0] = x(0, 548, 548, tick + 1.0/350.0) - x(0, 548, 548, tick); // "dx" component for routine 3
               returns[1] = y(105, 52, 275, tick + 1.0/350.0) - y(105, 52, 275, tick); // "dy" component for routine 3
     }
@@ -81,14 +89,17 @@ public class AutonomousCommand extends CommandBase {
   }
   private double x(int x0, int x1, int x2, double tick) {
     if (tick < 350) {
-      tick = tick / 350.0;
+      tick = tick - 150 / 350.0; // 150 is the same guess made in execute(), subject to change
+      return Math.pow((1 - tick), 2) * x0 + 2 * (1 - tick) * tick * x1 + Math.pow(tick, 2) * x2;
     }
-    return Math.pow((1 - tick), 2) * x0 + 2 * (1 - tick) * tick * x1 + Math.pow(tick, 2) * x2;
+    return 0;
+    
   }
   private double y(int y0, int y1, int y2, double tick) {
     if (tick < 350) {
-      tick = tick / 350.0;
+      tick = tick - 150 / 350.0; // 150 is the same guess made in execute(), subject to change
+      return Math.pow((1 - tick), 2) * y0 + 2 * (1 - tick) * tick * y1 + Math.pow(tick, 2) * y2;
     }
-    return Math.pow((1 - tick), 2) * y0 + 2 * (1 - tick) * tick * y1 + Math.pow(tick, 2) * y2;
+    return 0;
   }
 }
