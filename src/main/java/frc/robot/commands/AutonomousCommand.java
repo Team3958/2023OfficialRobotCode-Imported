@@ -39,6 +39,7 @@ public class AutonomousCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    tick = Robot.tick;
     if (0 < tick && tick < 150) { // 150 is a guess, will be however many ticks to complete block placement
       ; // This is where I will call the method to place the block
     } else if (151 < tick && tick < 450) { // 450 also a guess
