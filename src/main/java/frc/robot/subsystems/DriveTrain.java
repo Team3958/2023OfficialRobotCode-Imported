@@ -4,11 +4,19 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXPIDSetConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenixpro.configs.Slot0Configs;
+import com.ctre.phoenixpro.configs.VoltageConfigs;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,24 +32,20 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DriveTrain extends SubsystemBase {
-  private final WPI_TalonFX frontleft = new WPI_TalonFX(Constants.frontleft);
-  private final WPI_TalonFX backleft = new WPI_TalonFX(Constants.backleft);
-  private final WPI_TalonFX frontright = new WPI_TalonFX(Constants.frontright);
-  private final WPI_TalonFX backright = new WPI_TalonFX(Constants.backright);
-
-  /*private final Encoder FL_Encoder = new Encoder(null, null);
-  private final Encoder FR_Encoder = new Encoder(null, null);
-  private final Encoder BL_Encoder = new Encoder(null, null);
-  private final Encoder BR_Encoder = new Encoder(null, null);
-  */
-  
-  
+  private final WPI_TalonSRX frontleft = new WPI_TalonSRX(Constants.frontleft);
+  private final WPI_TalonSRX backleft = new WPI_TalonSRX(Constants.backleft);
+  private final WPI_TalonSRX frontright = new WPI_TalonSRX(Constants.frontright);
+  private final WPI_TalonSRX backright = new WPI_TalonSRX(Constants.backright);
+  private final XboxController xc = new XboxController(Constants.XboxPort);
+  private int dpad_angle;
  // navX MXP using SPI
-AHRS m_gyro = new AHRS(Port.kMXP);
+public AHRS m_gyro = new AHRS(Port.kMXP);
 
   // Locations of the wheels relative to the robot center.
 Translation2d m_frontLeftLocation = new Translation2d(0.4572, 0.4572);
@@ -76,23 +80,36 @@ ________________________________________________________________________________
 // is a quarter of a rotation per second counterclockwise. The current
 // robot angle is 45 degrees.
 ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-  2.0, 2.0, Math.PI/2.0, Rotation2d.fromDegrees(45.0));
+  3.0, 1.0, Math.PI, Rotation2d.fromDegrees(45.0));
 
 // Now use this in our kinematics
 MecanumDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
+MecanumDrive m_drive;
 
   /** Creates a new DriveTrain. */
   public DriveTrain() {
 
-
     TalonSRXConfiguration config1 = new TalonSRXConfiguration();
       config1.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
+
+      config1.peakCurrentLimit = Constants.currentlimit_DriveTrain;
+
+      config1.slot0.kF = Constants.kF;
+      config1.slot0.kP = Constants.kP;
+      config1.slot0.kI = Constants.kI;
+      config1.slot0.kD = Constants.kD;
+    TalonSRXPIDSetConfiguration pidConfig = new TalonSRXPIDSetConfiguration();
       
-    initMotor(backleft);
-    initMotor(frontleft);
-    initMotor(backright);
-    initMotor(frontright);
+    initMotor(frontleft, config1);
+    initMotor(backleft, config1);
+    initMotor(frontright,config1);
+    initMotor(backright, config1);
+    
+    m_drive =  new MecanumDrive(frontleft, backleft, frontright, backright);
   
+    backleft.setInverted(InvertType.InvertMotorOutput);
+    backright.setInverted(InvertType.InvertMotorOutput);
+    //frontleft.set(TalonSRXControlMode.Velocity, 2.3,DemandType.ArbitraryFeedForward, 3.4);
   }
 
   @Override
@@ -111,6 +128,7 @@ MecanumDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
 
   //Not sure if this works but we try
   m_odometry.resetPosition(gyroAngle, wheelPositions, m_pose);
+
   }
 
 // Creating my odometry object from the kinematics object and the initial wheel positions.
@@ -127,17 +145,54 @@ MecanumDriveOdometry m_odometry = new MecanumDriveOdometry(
 );
 
 //re-add the configs once we are on SRX
-public void initMotor(WPI_TalonFX motor){
+public void initMotor(WPI_TalonSRX motor, TalonSRXConfiguration config){
+  //motor.configFactoryDefault();
   motor.setNeutralMode(NeutralMode.Brake);
+  motor.configAllSettings(config);
 }
 
-public void MechDrive(double x, double y, double z, Rotation2d theta ){
-  MecanumDrive m_drive = new MecanumDrive(frontleft, backleft, frontright, backleft);
-  m_drive.driveCartesian(x, y, z, m_gyro.getRotation2d());
+public void MechDrive(double x, double y, double z, Rotation2d i ){
+  x = Math.pow(x, 3) ;
+  y = Math.pow(y, 3) ;
+  //z = Math.pow(z, 3) ;
+  m_drive.driveCartesian(x, y, z);
+
+}
+public void VelocityMode(int speed){
+    frontleft.set(ControlMode.Velocity, speed);
+    frontright.set(ControlMode.Velocity, speed);
+    backleft.set(ControlMode.Velocity, speed);
+    backright.set(ControlMode.Velocity, speed);
+    SmartDashboard.putNumber("motor speed FL", frontleft.getSelectedSensorVelocity());
 }
 
-public Rotation2d geRotation2d(){
+public Rotation2d getRotation2d(){
   return m_gyro.getRotation2d();
+}
+public void drive_by_voltage(double volts){
+  frontleft.setVoltage(volts);
+  frontright.setVoltage(volts);
+  backleft.setVoltage(volts);
+  backright.setVoltage(volts);
+}
+public void zeroYaw(){
+  m_gyro.zeroYaw();
+}
+
+public double getAngle(){
+  return m_gyro.getAngle();
+}
+
+public float getYaw(){
+  return m_gyro.getYaw();
+}
+
+public double getPitch(){
+  return m_gyro.getPitch();
+}
+
+public double getRoll(){
+  return m_gyro.getRoll();
 }
 
 }
