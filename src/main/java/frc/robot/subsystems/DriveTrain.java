@@ -27,11 +27,14 @@ import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -92,13 +95,13 @@ MecanumDrive m_drive;
     TalonSRXConfiguration config1 = new TalonSRXConfiguration();
       config1.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
 
-      config1.peakCurrentLimit = Constants.currentlimit_DriveTrain;
+      //config1.peakCurrentLimit = Constants.currentlimit_DriveTrain;
 
       config1.slot0.kF = Constants.kF;
       config1.slot0.kP = Constants.kP;
       config1.slot0.kI = Constants.kI;
       config1.slot0.kD = Constants.kD;
-    TalonSRXPIDSetConfiguration pidConfig = new TalonSRXPIDSetConfiguration();
+    
       
     initMotor(frontleft, config1);
     initMotor(backleft, config1);
@@ -108,8 +111,9 @@ MecanumDrive m_drive;
     m_drive =  new MecanumDrive(frontleft, backleft, frontright, backright);
   
     backleft.setInverted(InvertType.InvertMotorOutput);
-    backright.setInverted(InvertType.InvertMotorOutput);
-    //frontleft.set(TalonSRXControlMode.Velocity, 2.3,DemandType.ArbitraryFeedForward, 3.4);
+    frontleft.setInverted(InvertType.InvertMotorOutput);
+    
+  
   }
 
   @Override
@@ -128,6 +132,18 @@ MecanumDrive m_drive;
 
   //Not sure if this works but we try
   m_odometry.resetPosition(gyroAngle, wheelPositions, m_pose);
+
+  SmartDashboard.putNumber("yaw", getYaw());
+  SmartDashboard.putNumber("pitch", getPitch());
+  SmartDashboard.putNumber("roll", getRoll());
+  SmartDashboard.putNumber("Heading", getAngle());
+
+  SmartDashboard.putNumber("frontLeft speed", frontleft.getMotorOutputPercent());
+  SmartDashboard.putNumber("frontRight speed", frontright.getMotorOutputPercent());
+  SmartDashboard.putNumber("backLeft speed", backleft.getMotorOutputPercent());
+  SmartDashboard.putNumber("backRight speed", backright.getMotorOutputPercent());
+
+
 
   }
 
@@ -151,9 +167,9 @@ public void initMotor(WPI_TalonSRX motor, TalonSRXConfiguration config){
   motor.configAllSettings(config);
 }
 
-public void MechDrive(double x, double y, double z, Rotation2d i ){
-  x = Math.pow(x, 3) ;
-  y = Math.pow(y, 3) ;
+public void MechDrive(double x, double y, double z){
+  //x = Math.pow(x, 3) ;
+  //y = Math.pow(y, 3) ;
   //z = Math.pow(z, 3) ;
   m_drive.driveCartesian(x, y, z);
 
