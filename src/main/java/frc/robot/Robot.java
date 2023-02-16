@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -23,7 +22,8 @@ import frc.robot.commands.Auton.Trajectories;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  
+
+
   private RobotContainer m_robotContainer;
   public static Timer m_autoTimer = new Timer();
   Trajectories trajectories = new Trajectories();
@@ -31,31 +31,28 @@ public class Robot extends TimedRobot {
 
   String selected_path;
 
-  private String somethingPath = "pathplanner/generatedCSV/Test Path (safe).csv";
+  private String somethingPath = "src/main/deploy/pathplanner/generatedCSV/New Path.csv";
   MPController mpController = new MPController();
+
+  Command autoCommand;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
-  Command autoCommand;
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
-
     selected_path = somethingPath;
      for(int i = 0; i < 2; i++){
       selectedTrajectory[i] = trajectories.getTrajectoryFromCSV(selected_path)[i];
      }
-
-
-
+    m_robotContainer = new RobotContainer();
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+   * that you want ran during disabled, autonomous, teleoperated and test.
    *
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
@@ -66,6 +63,30 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    CommandScheduler.getInstance().run();
+  }
+
+  /** This function is called once each time the robot enters Disabled mode. */
+  @Override
+  public void disabledInit() {}
+
+  @Override
+  public void disabledPeriodic() {}
+
+  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  @Override
+  public void autonomousInit() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
+  }
+
+  /** This function is called periodically during autonomous. */
+  @Override
+  public void autonomousPeriodic() {
     mpController.drive.putEncoder();
     mpController.drive.putGyro();
     SmartDashboard.putNumber("X Pose (Ft): ", Units.metersToFeet(mpController.drive.getPose().getX()));
@@ -75,53 +96,15 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
   }
 
-  /** This function is called once each time the robot enters Disabled mode. */
-  @Override
-  public void disabledInit() {
-    // Cancel any commands that were running
-    mpController.drive.setOutputVelocity(new MecanumDriveWheelSpeeds());
-    CommandScheduler.getInstance().cancelAll();
-  }
-
-  @Override
-  public void disabledPeriodic() {}
-
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    mpController.drive.resetEncoders();
-    mpController.drive.initializeOdometry();
-    mpController.drive.reset();
-    mpController.drive.resetOdometry(selectedTrajectory[0].getInitialPose());
-    mpController.drive.periodic();
-    // schedule the autonomous command (example)
-    autoCommand = mpController.createTrajectoryFollowerCommand(selectedTrajectory[0], selectedTrajectory[1], 2.5);
-
-    autoCommand.schedule();
-
-    m_autoTimer.reset();
-    m_autoTimer.start();
-  }
-
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {
-    // Continue updating odometry while we use it in autonomous
-    mpController.drive.periodic(); 
-
-    if (autoCommand.isFinished()){
-      m_autoTimer.stop();
-    }
-  }
-
   @Override
   public void teleopInit() {
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    CommandScheduler.getInstance().cancelAll();
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
   }
 
   /** This function is called periodically during operator control. */
@@ -137,4 +120,12 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  /** This function is called once when the robot is first started up. */
+  @Override
+  public void simulationInit() {}
+
+  /** This function is called periodically whilst in simulation. */
+  @Override
+  public void simulationPeriodic() {}
 }

@@ -16,7 +16,7 @@ import frc.robot.subsystems.DriveTrain;
 public class Driving extends CommandBase {
   private final DriveTrain dt;
   private final XboxController xc;
-  private int button;
+
 
   /** Creates a new Driving. */
   public Driving(DriveTrain d, XboxController x) {
@@ -38,25 +38,14 @@ public class Driving extends CommandBase {
   @Override
   public void execute() {
 
-    SmartDashboard.putNumber("yaw", dt.getYaw());
-    SmartDashboard.putNumber("pitch", dt.getPitch());
-    SmartDashboard.putNumber("roll", dt.getRoll());
-    button = xc.getPOV();
-    
-    if(button == 0){
-      dt.VelocityMode(50);
-    }
-    else{dt.VelocityMode(0);}
-    dt.MechDrive(xc.getRightX(), xc.getRightY(), xc.getLeftX()*0.3, dt.getRotation2d());
-    //dt.drive_by_voltage(3);
+    dt.MechDrive(-xc.getRightX(), xc.getLeftX(), xc.getLeftY());
 
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    dt.MechDrive(0, 0, 0, new Rotation2d());
-    //dt.drive_by_voltage(0);
+    dt.MechDrive(0, 0, 0);
   }
 
   // Returns true when the command should end.

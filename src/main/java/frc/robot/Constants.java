@@ -52,7 +52,7 @@ public final class Constants {
     public static final double kS = 0;
     public static final double kV = 0;
     public static final double kA = 0;
-    public static final int currentlimit_DriveTrain = 40;
+    public static final int currentlimit_DriveTrain = 10;
     
 
 }
