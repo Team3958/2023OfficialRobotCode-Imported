@@ -23,7 +23,7 @@ public class AutonRoutine extends CommandBase {
 
   String selected_path;
 
-  private String somethingPath = "src/main/deploy/pathplanner/generatedCSV/New Path.csv";
+  private String somethingPath = "C:/Users/roboticsstudent.ROBOTICS02-5188/Desktop/2023 Season Robot/2023OfficialRobotCode-Imported/src/main/deploy/pathplanner/generatedCSV/New Path.csv";
   MPController mpController = new MPController();
 
 Command autoCommand;
@@ -69,7 +69,7 @@ Command autoCommand;
     SmartDashboard.putNumber("Y Pose (Ft): ", Units.metersToFeet(mpController.drive.getPose().getY()));
     SmartDashboard.putNumber("Rotation Pose (Degrees): ", mpController.drive.getPose().getRotation().getDegrees());
     mpController.drive.putWheelVelocities();
-    CommandScheduler.getInstance().run();
+    //CommandScheduler.getInstance().run();
   }
 
   // Called once the command ends or is interrupted.

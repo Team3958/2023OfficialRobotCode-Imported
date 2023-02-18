@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AutonRoutine;
 import frc.robot.commands.Driving;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FullAutonRoutine;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,10 +30,12 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain m_dt = new DriveTrain();
   private final XboxController m_xc = new XboxController(Constants.XboxPort);
+  
 
   private final Robot robot = new Robot();
   private final AutonRoutine auto = new AutonRoutine();
   private final Command AutoC = robot.autoCommand; 
+  private final FullAutonRoutine FA = new FullAutonRoutine();
   private final Driving m_driving = new Driving(m_dt, m_xc);
 
 

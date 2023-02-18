@@ -16,6 +16,7 @@ import frc.robot.subsystems.DriveTrain;
 public class Driving extends CommandBase {
   private final DriveTrain dt;
   private final XboxController xc;
+  
 
 
   /** Creates a new Driving. */
@@ -38,7 +39,7 @@ public class Driving extends CommandBase {
   @Override
   public void execute() {
 
-    dt.MechDrive(-xc.getRightX(), xc.getLeftX(), xc.getLeftY());
+    dt.MechDrive(xc.getRightX(), xc.getLeftX(), xc.getRightY());
 
   }
 

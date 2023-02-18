@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXPIDSetConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -41,10 +42,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DriveTrain extends SubsystemBase {
-  private final WPI_TalonSRX frontleft = new WPI_TalonSRX(Constants.frontleft);
-  private final WPI_TalonSRX backleft = new WPI_TalonSRX(Constants.backleft);
-  private final WPI_TalonSRX frontright = new WPI_TalonSRX(Constants.frontright);
-  private final WPI_TalonSRX backright = new WPI_TalonSRX(Constants.backright);
+  private final WPI_TalonFX frontleft = new WPI_TalonFX(Constants.frontleft);
+  private final WPI_TalonFX backleft = new WPI_TalonFX(Constants.backleft);
+  private final WPI_TalonFX frontright = new WPI_TalonFX(Constants.frontright);
+  private final WPI_TalonFX backright = new WPI_TalonFX(Constants.backright);
   private final XboxController xc = new XboxController(Constants.XboxPort);
   private int dpad_angle;
  // navX MXP using SPI
@@ -92,7 +93,7 @@ MecanumDrive m_drive;
   /** Creates a new DriveTrain. */
   public DriveTrain() {
 
-    TalonSRXConfiguration config1 = new TalonSRXConfiguration();
+    TalonFXConfiguration config1 = new TalonFXConfiguration();
       config1.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder;
 
       //config1.peakCurrentLimit = Constants.currentlimit_DriveTrain;
@@ -108,12 +109,11 @@ MecanumDrive m_drive;
     initMotor(frontright,config1);
     initMotor(backright, config1);
     
-    m_drive =  new MecanumDrive(frontleft, backleft, frontright, backright);
+    m_drive =  new MecanumDrive(frontleft, backleft, backright, frontright);
   
-    backleft.setInverted(InvertType.InvertMotorOutput);
-    frontleft.setInverted(InvertType.InvertMotorOutput);
+    backleft.setInverted(true);
+    frontleft.setInverted(true);
     
-  
   }
 
   @Override
@@ -161,7 +161,7 @@ MecanumDriveOdometry m_odometry = new MecanumDriveOdometry(
 );
 
 //re-add the configs once we are on SRX
-public void initMotor(WPI_TalonSRX motor, TalonSRXConfiguration config){
+public void initMotor(WPI_TalonFX motor, TalonFXConfiguration config){
   //motor.configFactoryDefault();
   motor.setNeutralMode(NeutralMode.Brake);
   motor.configAllSettings(config);
@@ -179,7 +179,6 @@ public void VelocityMode(int speed){
     frontright.set(ControlMode.Velocity, speed);
     backleft.set(ControlMode.Velocity, speed);
     backright.set(ControlMode.Velocity, speed);
-    SmartDashboard.putNumber("motor speed FL", frontleft.getSelectedSensorVelocity());
 }
 
 public Rotation2d getRotation2d(){
