@@ -76,6 +76,11 @@ public final class Constants {
         // Characterization Data
         public static final double kS = 0.495;
         public static final double kV = 2.04;
-        public static final double kA = 0.075;    
+        public static final double kA = 0.075;
+        public static final int intake1 = 0;
+        public static final int intake2 = 0;
+        public static final int XboxPortA = 0;
+        public static final int XboxPortB = 0;
+        public static final int XboxPort2 = 0;    
 
 }
