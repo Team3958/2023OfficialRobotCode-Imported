@@ -175,12 +175,16 @@ public class TrajectoryFollowerCommand extends CommandBase {
     var targetWheelSpeeds = m_kinematics.toWheelSpeeds(targetChassisSpeeds);
     double[] list = {targetWheelSpeeds.frontLeftMetersPerSecond,targetWheelSpeeds.frontRightMetersPerSecond, targetWheelSpeeds.rearLeftMetersPerSecond, targetWheelSpeeds.rearRightMetersPerSecond};
     double sum = 0;
+    double max = getMax(list);
+    double min = getMin(list);
+    double dif = max-min;
+    double current;
     for(int i = 0; i < list.length;i++){
-        sum+= list[i];
+        current = (list[i]-min)/ dif;
+        list[i] = current;
     }
-    for(int i = 0; i < list.length;i++){
-        list[i] /= sum;
-    }
+    System.out.println(list);
+    
 
     var frontLeftSpeedSetpoint = list[0];
     var rearLeftSpeedSetpoint = list[2];
@@ -254,6 +258,25 @@ public class TrajectoryFollowerCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_timer.stop();
+  }
+
+  public double getMax(double[] list){
+    double max = 0;
+    for (int i = 0; i < list.length; i++){
+        if (list[i] > max){
+            max = list[i];
+        }
+    }
+    return max;
+  }
+  public double getMin(double[] list){
+    double min = 0;
+    for (int i = 0; i < list.length; i++){
+        if (list[i] < min){
+            min = list[i];
+        }
+    }
+    return min;
   }
 
   @Override

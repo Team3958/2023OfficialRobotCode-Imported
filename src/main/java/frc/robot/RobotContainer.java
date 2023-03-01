@@ -12,10 +12,13 @@ import frc.robot.commands.AutoOne;
 import frc.robot.commands.AutonRoutine;
 import frc.robot.commands.Driving;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Extake;
 import frc.robot.commands.FullAutonRoutine;
+import frc.robot.commands.Take;
 import frc.robot.commands.Auton.MPController;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.intake;
 import frc.robot.subsystems.AutonStuff.AutoDriveSystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
@@ -32,17 +35,19 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain m_dt = new DriveTrain();
-  private final XboxController m_xc = new XboxController(Constants.XboxPort);
+  private final XboxController m_driver = new XboxController(Constants.XboxPort);
+  private final XboxController m_operator = new XboxController(Constants.XboxPort2);
   private final AutoDriveSystem m_ads = new AutoDriveSystem();
-  
-
+  private final intake m_intake = new intake();
   private final Robot robot = new Robot();
 
+
+  private final Extake m_extake = new Extake(m_intake);
+  private final Take m_take = new Take(m_intake);
   private final MPController m_mpc = new MPController();
-  private final Driving m_driving = new Driving(m_dt, m_xc);
+  private final Driving m_driving = new Driving(m_dt, m_driver);
   private final FullAutonRoutine auto = new FullAutonRoutine();
   private final AutonRoutine autoC = new AutonRoutine(m_mpc, m_ads);
-
 
   //private final Command plz = auto; 
 
@@ -63,6 +68,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     m_dt.setDefaultCommand(m_driving);
+
+    new JoystickButton(m_operator, Constants.XboxPortB)
+      .toggleOnTrue(m_take);
+
+    new JoystickButton(m_operator, Constants.XboxPortA)
+      .toggleOnTrue(m_extake);
+    
 
   }
 
