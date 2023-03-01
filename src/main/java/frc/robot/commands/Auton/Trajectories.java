@@ -1,5 +1,7 @@
 package frc.robot.commands.Auton;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -7,16 +9,10 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
-
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -105,20 +101,14 @@ public class Trajectories {
     private Trajectory[] loadTrajectoryFromPathCSV(String path) throws IOException {
         List<Trajectory.State> states = new Vector<Trajectory.State>();
         List<Trajectory.State> headingStates = new Vector<Trajectory.State>();
-        
-        path = "pathplanner/generatedCSV/New Path.csv";
+
         // path should be something like paths/ExamplePath.csv
         Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(path);
-        //System.out.println(trajectoryPath);
-       // System.out.print(": this is it");
-        //rajectoryPath = Paths.get(path);
-        
-
         //Path trajectoryPath = Path.of("C:/Users/jacka/Documents/Robotics/PathPlanner/ExamplePath.csv");
+
         List<String[]> collect =
           Files.lines(trajectoryPath).map(line -> line.split(",")).collect(Collectors.toList());
 
-        //System.out.println("input works?");
         // Path Planner output format: (t, v, a, x, y, hh, r, h)
         int c = 0;
         double changeInRad;
@@ -129,12 +119,10 @@ public class Trajectories {
             if (s[6] == "Infinity"){
                 states.add(new Trajectory.State(Double.parseDouble(s[0]), Double.parseDouble(s[1]), Double.parseDouble(s[2]), new Pose2d(Double.parseDouble(s[3]), -Math.sqrt(2)*Double.parseDouble(s[4]), Rotation2d.fromDegrees(-1*Double.parseDouble(s[5]))), 1/Double.POSITIVE_INFINITY));
             } else {
-                //System.out.println("worksish");
                 states.add(new Trajectory.State(Double.parseDouble(s[0]), Double.parseDouble(s[1]), Double.parseDouble(s[2]), new Pose2d(Double.parseDouble(s[3]), -Math.sqrt(2)*Double.parseDouble(s[4]), Rotation2d.fromDegrees(-1*Double.parseDouble(s[5]))), 1/Double.parseDouble(s[6])));
             }
             if (c == 0){
                 headingStates.add(new Trajectory.State(Double.parseDouble(s[0]), 0, 0, new Pose2d(Double.parseDouble(s[3]), -1*Double.parseDouble(s[4]), Rotation2d.fromDegrees(Double.parseDouble(s[7]))), 0));
-                //System.out.println("pls");
             } else {
                 changeInRad = Math.toRadians(Math.abs(Double.parseDouble(s[5])) - Math.abs(Double.parseDouble(collect.get(c-1)[5])));
                 angularVelocity = changeInRad/timeStep;
@@ -171,6 +159,6 @@ public class Trajectories {
     /**
      * Test method to run methods outside of the entire program. Allows for testing trajectories
      */
-    //public static void main(String[] args) {
-   // }
+    public static void main(String[] args) {
+    }
 }

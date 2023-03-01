@@ -34,25 +34,48 @@ public final class Constants {
     public static final int extend = 0;
     public static final int wrist = 0;
     public static final int grip = 0;
-    public static final double kFrontLeft_x = 0;
-    public static final double kFrontRight_x = 0;
-    public static final double kBackLeft_x = 0;
-    public static final double kFrontLeft_y = 0;
-    public static final double kBackRight_x = 0;
-    public static final double kFrontRight_y = 0;
-    public static final double kBackLeft_y = 0;
-    public static final double kBackRight_y = 0;
-    public static final double kEncoderTicksPerRev = 0;
-    public static final double kGearRatio = 0;
-    public static final double kWheelRadiusInches = 0;
-    public static final double fl_kP = 0;
-    public static final double fr_kP = 0;
-    public static final double bl_kP = 0;
-    public static final double br_kP = 0;
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kA = 0;
-    public static final int currentlimit_DriveTrain = 10;
-    
+
+    public static final double kWheelRadiusInches = 3;
+        public static final double kWheelRadiusMeters = 0.1016;
+        public static final int kEncoderTicksPerRev = 2048;
+
+        // Wheel positions in FEET
+        public static final double kFrontRight_y = -1;
+        public static final double kFrontRight_x = 0.875;
+        public static final double kFrontLeft_y = 1;
+        public static final double kFrontLeft_x = 0.875;
+        public static final double kBackLeft_y = 1;
+        public static final double kBackLeft_x = -0.875;
+        public static final double kBackRight_y = -1;
+        public static final double kBackRight_x = -0.875;
+
+        // Wheel Gearing
+        public static final double kGearRatio = 10;
+
+        // Speed Constraints
+        public static final double kMaxSpeedFeetPerSecond = 5.0;
+        public static final double kMaxAccelerationFeetPerSecond = 10.0;
+
+        // PID Constants
+        public static final double fl_kP = 0.127;
+        public static final double fl_kI = 0;
+        public static final double fl_kD = 0;
+
+        public static final double bl_kP = 0.127;
+        public static final double bl_kI = 0;
+        public static final double bl_kD = 0;
+
+        public static final double fr_kP = 0.127;
+        public static final double fr_kI = 0;
+        public static final double fr_kD = 0;
+
+        public static final double br_kP = 0.127;
+        public static final double br_kI = 0;
+        public static final double br_kD = 0;
+        
+        // Characterization Data
+        public static final double kS = 0.495;
+        public static final double kV = 2.04;
+        public static final double kA = 0.075;    
 
 }

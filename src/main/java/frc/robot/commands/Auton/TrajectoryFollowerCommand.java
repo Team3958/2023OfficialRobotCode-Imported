@@ -118,23 +118,22 @@ public class TrajectoryFollowerCommand extends CommandBase {
             thetaController);
 
     m_maxWheelVelocityMetersPerSecond =
-
-            requireNonNull(maxWheelVelocityMetersPerSecond);
+        (maxWheelVelocityMetersPerSecond);
 
     m_frontLeftController =
-        requireNonNull(frontLeftController);
+        (frontLeftController);
     m_rearLeftController =
-        requireNonNull( rearLeftController);
+        ( rearLeftController);
     m_frontRightController =
-           requireNonNull( frontRightController);
+           ( frontRightController);
     m_rearRightController =
-        requireNonNull(rearRightController);
+        (rearRightController);
 
     m_currentWheelSpeeds =
-        requireNonNull( currentWheelSpeeds);
+        ( currentWheelSpeeds);
 
     m_outputDriveVoltages =
-        requireNonNull( outputDriveVoltages);
+        ( outputDriveVoltages);
 
     m_outputWheelSpeeds = null;
 
@@ -192,6 +191,7 @@ public class TrajectoryFollowerCommand extends CommandBase {
     double rearLeftOutput;
     double frontRightOutput;
     double rearRightOutput;
+
 
     if (m_usePID) {
       final double frontLeftFeedforward =
@@ -260,9 +260,5 @@ public class TrajectoryFollowerCommand extends CommandBase {
   public boolean isFinished() {
     return m_timer.hasElapsed(m_trajectory.getTotalTimeSeconds());
   }
-  public static <T> T requireNonNull(T obj) {
-    if (obj == null)
-        throw new NullPointerException();
-    return obj;
-}
+ 
 }

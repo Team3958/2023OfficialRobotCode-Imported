@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotContainer;
 import frc.robot.commands.Auton.MPController;
 import frc.robot.commands.Auton.Trajectories;
+import frc.robot.subsystems.AutonStuff.AutoDriveSystem;
 
 public class AutonRoutine extends CommandBase {
   
@@ -24,12 +25,17 @@ public class AutonRoutine extends CommandBase {
   String selected_path;
 
   private String somethingPath = "C:/Users/roboticsstudent.ROBOTICS02-5188/Desktop/2023 Season Robot/2023OfficialRobotCode-Imported/src/main/deploy/pathplanner/generatedCSV/New Path.csv";
-  MPController mpController = new MPController();
+  MPController mpController;
+  AutoDriveSystem AutoDriveSystem;
 
-Command autoCommand;
+  Command autoCommand;
   
   /** Creates a new AutonRoutine. */
-  public AutonRoutine() {
+  public AutonRoutine(MPController mp, AutoDriveSystem ads) {
+ 
+    mpController = mp;
+    AutoDriveSystem = ads;
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -69,7 +75,6 @@ Command autoCommand;
     SmartDashboard.putNumber("Y Pose (Ft): ", Units.metersToFeet(mpController.drive.getPose().getY()));
     SmartDashboard.putNumber("Rotation Pose (Degrees): ", mpController.drive.getPose().getRotation().getDegrees());
     mpController.drive.putWheelVelocities();
-    //CommandScheduler.getInstance().run();
   }
 
   // Called once the command ends or is interrupted.

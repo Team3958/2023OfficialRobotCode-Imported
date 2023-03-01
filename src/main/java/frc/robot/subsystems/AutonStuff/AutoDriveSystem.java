@@ -1,4 +1,4 @@
-package frc.robot.commands.Auton;
+package frc.robot.subsystems.AutonStuff;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -20,8 +20,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.subsystems.AutonStuff.AutonKinematics;
-import frc.robot.subsystems.AutonStuff.AutonOdometry;
+import frc.robot.commands.AutonRoutine;
 
 
 public class AutoDriveSystem {
@@ -50,10 +49,10 @@ public class AutoDriveSystem {
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
 
 
-    public static void main(String[] args){
+    /*public static void main(String[] args){
         System.out.println(kinematics.toChassisSpeeds(new MecanumDriveWheelSpeeds(1, -1, -1, 1)));
         System.out.println(kinematics.toWheelSpeeds(new ChassisSpeeds(0, 1, 1)));
-    }
+    }*/
     // Adjust based on how well the robot tracks the trajectory. NOT TUNED
     PIDController xController = new PIDController(1, 0, 0);
     PIDController yController = new PIDController(1.1, 0, 0);
@@ -142,7 +141,8 @@ public class AutoDriveSystem {
     }
 
     public Rotation2d getDesiredRotation(){
-        return Robot.selectedTrajectory[1].sample(Robot.m_autoTimer.get()).poseMeters.getRotation();
+        return AutonRoutine.selectedTrajectory[1].sample(AutonRoutine.m_autoTimer.get()).poseMeters.getRotation(); 
+        
     }
 
     /**

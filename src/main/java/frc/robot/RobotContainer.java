@@ -8,12 +8,15 @@ import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AutoOne;
 import frc.robot.commands.AutonRoutine;
 import frc.robot.commands.Driving;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FullAutonRoutine;
+import frc.robot.commands.Auton.MPController;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.AutonStuff.AutoDriveSystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -30,16 +33,18 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain m_dt = new DriveTrain();
   private final XboxController m_xc = new XboxController(Constants.XboxPort);
+  private final AutoDriveSystem m_ads = new AutoDriveSystem();
   
 
   private final Robot robot = new Robot();
-  private final AutonRoutine auto = new AutonRoutine();
-  private final Command AutoC = robot.autoCommand; 
-  private final FullAutonRoutine FA = new FullAutonRoutine();
+
+  private final MPController m_mpc = new MPController();
   private final Driving m_driving = new Driving(m_dt, m_xc);
+  private final FullAutonRoutine auto = new FullAutonRoutine();
+  private final AutonRoutine autoC = new AutonRoutine(m_mpc, m_ads);
 
 
-  private final Command plz = auto; 
+  //private final Command plz = auto; 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -68,6 +73,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return plz;
+    System.out.println("THis should no happedn");
+    return autoC;
   }
 }
