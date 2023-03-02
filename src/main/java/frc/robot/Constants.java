@@ -77,6 +77,8 @@ public final class Constants {
         public static final double kS = 0.495;
         public static final double kV = 2.04;
         public static final double kA = 0.075;
+
+        
         public static final int intake1 = 0;
         public static final int intake2 = 0;
         public static final int XboxPortA = 0;
