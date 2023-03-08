@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
 
   public static Trajectory[] selectedTrajectory = new Trajectory[2];
 
+  private RobotContainer m_RobotContainer;
   String selectedPath;
 
   double trajectoryTime;
@@ -59,6 +60,7 @@ public class Robot extends TimedRobot {
     mpController.drive.setupMotorConfigs();
 
     trajectoryTime = selectedTrajectory[0].getTotalTimeSeconds();
+    m_RobotContainer = new RobotContainer();
     System.out.println("Total Trajectory Time: " + trajectoryTime + "s");
     
   }
