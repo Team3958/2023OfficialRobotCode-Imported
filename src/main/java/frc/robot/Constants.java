@@ -57,26 +57,26 @@ public final class Constants {
         public static final double kMaxAccelerationFeetPerSecond = 10.0;
 
         // PID Constants
-        public static final double fl_kP = 0.127;
+        public static final double fl_kP = 0.2;
         public static final double fl_kI = 0;
-        public static final double fl_kD = 0;
+        public static final double fl_kD = 0.05;
 
-        public static final double bl_kP = 0.127;
+        public static final double bl_kP = 0.2;// 0.127
         public static final double bl_kI = 0;
-        public static final double bl_kD = 0;
+        public static final double bl_kD = 0.05;
 
-        public static final double fr_kP = 0.127;
+        public static final double fr_kP = 0.2;
         public static final double fr_kI = 0;
-        public static final double fr_kD = 0;
+        public static final double fr_kD = 0.05;
 
-        public static final double br_kP = 0.127;
+        public static final double br_kP = 0.2;
         public static final double br_kI = 0;
-        public static final double br_kD = 0;
+        public static final double br_kD = 0.05;
         
         // Characterization Data
-        public static final double kS = 0.495;
-        public static final double kV = 2.04;
-        public static final double kA = 0.075;
+        public static final double kS = 5;// 0.495
+        public static final double kV = 2;// 2.04
+        public static final double kA = 1;// 0.0755
 
         
         public static final int intake1 = 0;

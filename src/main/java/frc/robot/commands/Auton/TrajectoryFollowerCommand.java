@@ -174,17 +174,15 @@ public class TrajectoryFollowerCommand extends CommandBase {
         m_controller.calculate(m_pose.get(), desiredState, desiredState.poseMeters.getRotation(), desiredHeading);
     var targetWheelSpeeds = m_kinematics.toWheelSpeeds(targetChassisSpeeds);
     double[] list = {targetWheelSpeeds.frontLeftMetersPerSecond,targetWheelSpeeds.frontRightMetersPerSecond, targetWheelSpeeds.rearLeftMetersPerSecond, targetWheelSpeeds.rearRightMetersPerSecond};
+   
     double sum = 0;
-    double max = getMax(list);
-    double min = getMin(list);
-    double dif = max-min;
-    double current;
     for(int i = 0; i < list.length;i++){
-        current = (list[i]-min)/ dif;
-        list[i] = current;
+        sum+= list[i];
     }
-    System.out.println(list);
-    
+    for(int i = 0; i < list.length;i++){
+        list[i] /= (sum*8);
+    }
+
 
     var frontLeftSpeedSetpoint = list[0];
     var rearLeftSpeedSetpoint = list[2];

@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
   String circlePath = "paths/TestCircle.csv";
   String plz = "pathplanner/generatedCSV/New Path.csv";
   String safe = "pathplanner/generatedCSV/Test Path (safe).csv";
+  String straight = "pathplanner/generatedCSV/Straight.csv";
   Command autoCommand;
 
   @Override
@@ -51,7 +52,7 @@ public class Robot extends TimedRobot {
     mpController = new MPController();
 
     // Sets the path to be driven. 
-    selectedPath = plz;
+    selectedPath = straight;
 
     for (int i = 0; i < 2; i++){
       selectedTrajectory[i] = trajectories.getTrajectoryFromCSV(selectedPath)[i];

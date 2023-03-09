@@ -16,7 +16,7 @@ import frc.robot.Constants;
 
 public class intake extends SubsystemBase {
   /** Creates a new intake. */
-  TalonSRX motor1 = new TalonSRX(Constants.intake);
+  TalonSRX motor1 = new TalonSRX(Constants.intake1);
   // adjust config
   TalonSRXConfiguration config1 = new TalonSRXConfiguration();
       ;
