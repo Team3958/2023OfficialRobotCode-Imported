@@ -4,12 +4,19 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.arm;
 
 public class ArmSwing extends CommandBase {
+  private arm Arm;
+  private XboxController
   /** Creates a new ArmSwing. */
-  public ArmSwing() {
+  public ArmSwing(arm a, XboxController x) {
     // Use addRequirements() here to declare subsystem dependencies.
+    Arm = a;
+    addRequirements(Arm);
+
   }
 
   // Called when the command is initially scheduled.
