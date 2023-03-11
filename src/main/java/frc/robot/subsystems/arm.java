@@ -38,6 +38,7 @@ public class arm extends SubsystemBase {
       config1.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder ;
       init_arm_motor(shoulder_motor, config1);
       init_arm_motor(shoulder2_motor, config1);
+      shoulder2_motor.setInverted(true);
       shoulder2_motor.follow(shoulder_motor);
 
       init_arm_motor(extend_motor, config1);
