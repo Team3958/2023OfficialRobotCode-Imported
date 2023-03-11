@@ -15,6 +15,7 @@ public class ArmSwing extends CommandBase {
   public ArmSwing(arm a, XboxController x) {
     // Use addRequirements() here to declare subsystem dependencies.
     Arm = a;
+    xc = x;
     addRequirements(Arm);
 
   }
@@ -25,7 +26,10 @@ public class ArmSwing extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    Arm.move_shoulder(xc.getLeftX()*0.4);
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
