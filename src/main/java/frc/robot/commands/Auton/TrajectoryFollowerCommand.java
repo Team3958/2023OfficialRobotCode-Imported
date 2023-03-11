@@ -1,21 +1,17 @@
 package frc.robot.commands.Auton;
 // require non-null may be an issue
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.PIDSTuff.PIDController;
+import frc.robot.subsystems.PIDSTuff.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveMotorVoltages;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.subsystems.AutonStuff.AutonKinematics;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -42,7 +38,7 @@ public class TrajectoryFollowerCommand extends CommandBase {
   private final Trajectory m_headingTrajectory;
   private final Supplier<Pose2d> m_pose;
   private final SimpleMotorFeedforward m_feedforward;
-  private final AutonKinematics m_kinematics;
+  private final MecanumKinematics m_kinematics;
   private final HolonomicController m_controller;
   private final double m_maxWheelVelocityMetersPerSecond;
   private final PIDController m_frontLeftController;
@@ -87,12 +83,11 @@ public class TrajectoryFollowerCommand extends CommandBase {
    */
   @SuppressWarnings({"PMD.ExcessiveParameterList", "ParameterName"})
   public TrajectoryFollowerCommand(
-    
       Trajectory trajectory,
       Trajectory headTrajectory,
       Supplier<Pose2d> pose,
       SimpleMotorFeedforward feedforward,
-      AutonKinematics kinematics,
+      MecanumKinematics kinematics,
       PIDController xController,
       PIDController yController,
       ProfiledPIDController thetaController,
@@ -104,7 +99,6 @@ public class TrajectoryFollowerCommand extends CommandBase {
       Supplier<MecanumDriveWheelSpeeds> currentWheelSpeeds,
       Consumer<MecanumDriveMotorVoltages> outputDriveVoltages,
       Subsystem... requirements) {
-        
     m_trajectory = trajectory;
     m_headingTrajectory = headTrajectory;
     m_pose = pose;
@@ -114,26 +108,26 @@ public class TrajectoryFollowerCommand extends CommandBase {
     m_controller =
         new HolonomicController(
             xController,
-            yController, 
+            yController,
             thetaController);
 
     m_maxWheelVelocityMetersPerSecond =
-        (maxWheelVelocityMetersPerSecond);
+            maxWheelVelocityMetersPerSecond;
 
     m_frontLeftController =
-        (frontLeftController);
+        frontLeftController;
     m_rearLeftController =
-        ( rearLeftController);
+        rearLeftController;
     m_frontRightController =
-           ( frontRightController);
+            frontRightController;
     m_rearRightController =
-        (rearRightController);
+        rearRightController;
 
     m_currentWheelSpeeds =
-        ( currentWheelSpeeds);
+        currentWheelSpeeds;
 
     m_outputDriveVoltages =
-        ( outputDriveVoltages);
+        outputDriveVoltages;
 
     m_outputWheelSpeeds = null;
 
@@ -173,15 +167,22 @@ public class TrajectoryFollowerCommand extends CommandBase {
     var targetChassisSpeeds =
         m_controller.calculate(m_pose.get(), desiredState, desiredState.poseMeters.getRotation(), desiredHeading);
     var targetWheelSpeeds = m_kinematics.toWheelSpeeds(targetChassisSpeeds);
+
     double[] list = {targetWheelSpeeds.frontLeftMetersPerSecond,targetWheelSpeeds.frontRightMetersPerSecond, targetWheelSpeeds.rearLeftMetersPerSecond, targetWheelSpeeds.rearRightMetersPerSecond};
-   
     double sum = 0;
+    double max = getMax(list);
+    double min = getMin(list);
+    double dif = max-min;
+    double current;
     for(int i = 0; i < list.length;i++){
         sum+= list[i];
     }
     for(int i = 0; i < list.length;i++){
-        list[i] /= (sum*8);
+        list[i] /= sum;
+        current = (list[i]-min)/ dif;
+        list[i] = current;
     }
+    System.out.println(list);
 
 
     var frontLeftSpeedSetpoint = list[0];
@@ -189,11 +190,12 @@ public class TrajectoryFollowerCommand extends CommandBase {
     var frontRightSpeedSetpoint = list[1];
     var rearRightSpeedSetpoint = list[3];
 
+    System.out.println(list[0]);
+
     double frontLeftOutput;
     double rearLeftOutput;
     double frontRightOutput;
     double rearRightOutput;
-
 
     if (m_usePID) {
       final double frontLeftFeedforward =
@@ -252,11 +254,8 @@ public class TrajectoryFollowerCommand extends CommandBase {
     m_prevTime = curTime;
     m_prevSpeeds = targetWheelSpeeds;
   }
-
-  @Override
-  public void end(boolean interrupted) {
-    m_timer.stop();
-  }
+  
+  
 
   public double getMax(double[] list){
     double max = 0;
@@ -276,10 +275,13 @@ public class TrajectoryFollowerCommand extends CommandBase {
     }
     return min;
   }
+  @Override
+  public void end(boolean interrupted) {
+    m_timer.stop();
+  }
 
   @Override
   public boolean isFinished() {
     return m_timer.hasElapsed(m_trajectory.getTotalTimeSeconds());
   }
- 
 }

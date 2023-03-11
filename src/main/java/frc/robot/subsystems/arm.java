@@ -56,7 +56,7 @@ public class arm extends SubsystemBase {
     motor.configAllSettings(config);
   }
   public void move_shoulder(int direction){
-    shoulder_motor.set(direction*0.3);
+    shoulder_motor.set(direction);
   }
 
   public void move_extend(int direction){

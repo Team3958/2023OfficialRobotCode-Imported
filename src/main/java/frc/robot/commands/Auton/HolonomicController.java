@@ -1,7 +1,7 @@
 package frc.robot.commands.Auton;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import frc.robot.subsystems.PIDSTuff.PIDController;
+import frc.robot.subsystems.PIDSTuff.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;

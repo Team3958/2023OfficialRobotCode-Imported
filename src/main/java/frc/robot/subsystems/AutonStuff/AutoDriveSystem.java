@@ -1,12 +1,14 @@
 package frc.robot.subsystems.AutonStuff;
 
+//hi jack - love hunter 
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import frc.robot.subsystems.PIDSTuff.PIDController;
+import frc.robot.subsystems.PIDSTuff.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,14 +16,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveMotorVoltages;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.commands.AutonRoutine;
-
+import frc.robot.commands.Auton.MecanumKinematics;
+import frc.robot.commands.Auton.MecanumOdometry;
+import frc.robot.Constants;;
 
 public class AutoDriveSystem {
 
@@ -41,18 +42,18 @@ public class AutoDriveSystem {
     static Translation2d m_backRightLocation = new Translation2d(Units.feetToMeters(Constants.kBackRight_x), Units.feetToMeters(Constants.kBackRight_y));
 
     // Creating my kinematics object using the wheel locations.
-    static AutonKinematics kinematics = new AutonKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+    static MecanumKinematics kinematics = new MecanumKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
     // Odometry Object -- Initialized after resetting encoders
-    AutonOdometry odometry;
+    MecanumOdometry odometry;
 
     // Simple Feed Forward gotten from CHARACTERIZATION | kS | kV | kA |
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
 
 
-    /*public static void main(String[] args){
+    public static void main(String[] args){
         System.out.println(kinematics.toChassisSpeeds(new MecanumDriveWheelSpeeds(1, -1, -1, 1)));
         System.out.println(kinematics.toWheelSpeeds(new ChassisSpeeds(0, 1, 1)));
-    }*/
+    }
     // Adjust based on how well the robot tracks the trajectory. NOT TUNED
     PIDController xController = new PIDController(1, 0, 0);
     PIDController yController = new PIDController(1.1, 0, 0);
@@ -97,7 +98,7 @@ public class AutoDriveSystem {
     }
 
     /**
-     * Gets the robots current position relative to Constantsnomous starting spot
+     * Gets the robots current position relative to Autonomous starting spot
      * @return Pose2d of current robot position
      */
     public Pose2d getPose() {
@@ -108,7 +109,7 @@ public class AutoDriveSystem {
         return feedforward;
     }
 
-    public AutonKinematics getKinematics() {
+    public MecanumKinematics getKinematics() {
         return kinematics;
     }
 
@@ -141,8 +142,7 @@ public class AutoDriveSystem {
     }
 
     public Rotation2d getDesiredRotation(){
-        return AutonRoutine.selectedTrajectory[1].sample(AutonRoutine.m_autoTimer.get()).poseMeters.getRotation(); 
-        
+        return Robot.selectedTrajectory[1].sample(Robot.m_autoTimer.get()).poseMeters.getRotation();
     }
 
     /**
@@ -236,7 +236,7 @@ public class AutoDriveSystem {
     }
 
     public void initializeOdometry(){
-        odometry = new AutonOdometry(kinematics, getHeading());
+        odometry = new MecanumOdometry(kinematics, getHeading());
     }
 
     public void setupMotorConfigs(){
@@ -247,8 +247,8 @@ public class AutoDriveSystem {
         frontLeft.setNeutralMode(NeutralMode.Coast);
         frontLeft.setSensorPhase(true);
         frontLeft.config_kP(0, Constants.fl_kP);
-        // frontLeft.config_kI(0, Constants.fl_kI);
-        // frontLeft.config_kD(0, Constants.fl_kD);
+        // frontLeft.config_kI(0, Auto.fl_kI);
+        // frontLeft.config_kD(0, Auto.fl_kD);
 
         frontRight.configFactoryDefault();
         // frontRight.configPeakOutputForward(1);
@@ -257,8 +257,8 @@ public class AutoDriveSystem {
         frontRight.setSensorPhase(true);
         frontRight.setInverted(true);
         frontRight.config_kP(0, Constants.fr_kP);
-        // frontRight.config_kI(0, Constants.fr_kI);
-        // frontRight.config_kD(0, Constants.fr_kD);
+        // frontRight.config_kI(0, Auto.fr_kI);
+        // frontRight.config_kD(0, Auto.fr_kD);
         
         backLeft.configFactoryDefault();
         // backLeft.configPeakOutputForward(1);
@@ -266,8 +266,8 @@ public class AutoDriveSystem {
         backLeft.setNeutralMode(NeutralMode.Coast);
         backLeft.setSensorPhase(true);
         backLeft.config_kP(0, Constants.bl_kP);
-        // backLeft.config_kI(0, Constants.bl_kI);
-        // backLeft.config_kD(0, Constants.bl_kD);
+        // backLeft.config_kI(0, Auto.bl_kI);
+        // backLeft.config_kD(0, Auto.bl_kD);
 
         backRight.configFactoryDefault();
         // backRight.configPeakOutputForward(1);
@@ -276,8 +276,8 @@ public class AutoDriveSystem {
         backRight.setSensorPhase(true);
         backRight.setInverted(true);
         backRight.config_kP(0, Constants.br_kP);
-        // backRight.config_kI(0, Constants.br_kI);
-        // backRight.config_kD(0, Constants.br_kD);
+        // backRight.config_kI(0, Auto.br_kI);
+        // backRight.config_kD(0, Auto.br_kD);
 
     }
 

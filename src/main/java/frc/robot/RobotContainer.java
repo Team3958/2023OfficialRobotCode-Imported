@@ -8,12 +8,11 @@ import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.AutoOne;
 import frc.robot.commands.AutonRoutine;
 import frc.robot.commands.Driving;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Extake;
-import frc.robot.commands.FullAutonRoutine;
+import frc.robot.commands.PID_Tuning_Command;
 import frc.robot.commands.Take;
 import frc.robot.commands.Auton.MPController;
 import frc.robot.subsystems.DriveTrain;
@@ -41,12 +40,11 @@ public class RobotContainer {
   private final intake m_intake = new intake();
   private final Robot robot = new Robot();
 
-
+  private final PID_Tuning_Command tuning = new PID_Tuning_Command(m_dt);
   private final Extake m_extake = new Extake(m_intake);
   private final Take m_take = new Take(m_intake);
   private final MPController m_mpc = new MPController();
   private final Driving m_driving = new Driving(m_dt, m_driver);
-  private final FullAutonRoutine auto = new FullAutonRoutine();
   private final AutonRoutine autoC = new AutonRoutine(m_mpc, m_ads);
 
   //private final Command plz = auto; 
@@ -66,14 +64,17 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
+    // setting defult to PID for testing
     m_dt.setDefaultCommand(m_driving);
+    //m_dt.setDefaultCommand(tuning);
+
 
     new JoystickButton(m_operator, Constants.XboxPortB)
       .toggleOnTrue(m_take);
 
     new JoystickButton(m_operator, Constants.XboxPortA)
-      .toggleOnTrue(m_extake);
+      .toggleOnTrue
+      (m_extake);
     
 
   }

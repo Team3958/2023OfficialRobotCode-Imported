@@ -29,14 +29,14 @@ public final class Constants {
     public static final double kD = 0;
 
 //Arm Constants
-    public static final int shoulder1 = 0;
-    public static final int shoulder2 = 0;
+    public static final int shoulder1 = 5;
+    public static final int shoulder2 = 6;
     public static final int extend = 0;
     public static final int wrist = 0;
     public static final int grip = 0;
 
     public static final double kWheelRadiusInches = 3;
-        public static final double kWheelRadiusMeters = 0.1016;
+        public static final double kWheelRadiusMeters = 0.0762;
         public static final int kEncoderTicksPerRev = 2048;
 
         // Wheel positions in FEET
@@ -74,9 +74,9 @@ public final class Constants {
         public static final double br_kD = 0.05;
         
         // Characterization Data
-        public static final double kS = 5;// 0.495
-        public static final double kV = 2;// 2.04
-        public static final double kA = 1;// 0.0755
+        public static final double kS = 0.495;// 0.495
+        public static final double kV = 2.04;// 2.04
+        public static final double kA = 0.0755;// 0.0755
 
         
         public static final int intake1 = 0;

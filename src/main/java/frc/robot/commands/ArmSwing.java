@@ -10,7 +10,7 @@ import frc.robot.subsystems.arm;
 
 public class ArmSwing extends CommandBase {
   private arm Arm;
-  private XboxController
+  private XboxController xc;
   /** Creates a new ArmSwing. */
   public ArmSwing(arm a, XboxController x) {
     // Use addRequirements() here to declare subsystem dependencies.

@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXPIDSetConfiguration;
@@ -20,6 +21,7 @@ import com.ctre.phoenixpro.configs.Slot0Configs;
 import com.ctre.phoenixpro.configs.VoltageConfigs;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -28,6 +30,7 @@ import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelPositions;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.XboxController;
@@ -48,6 +51,14 @@ public class DriveTrain extends SubsystemBase {
   private final WPI_TalonFX backright = new WPI_TalonFX(Constants.backright);
   private final XboxController xc = new XboxController(Constants.XboxPort);
   private int dpad_angle;
+
+  private ProfiledPIDController fl;
+  private double some;
+  private double p;
+  private double i;
+  private double d;
+
+
  // navX MXP using SPI
 public AHRS m_gyro = new AHRS(Port.kMXP);
 
@@ -114,6 +125,7 @@ MecanumDrive m_drive;
     backleft.setInverted(true);
     frontleft.setInverted(true);
     
+    fl = new ProfiledPIDController(Constants.fl_kP, Constants.fl_kI, Constants.fl_kD, new TrapezoidProfile.Constraints(4, 2));
   }
 
   @Override
@@ -145,6 +157,16 @@ MecanumDrive m_drive;
 
 
 
+
+  drive_by_voltage(fl.calculate(0));
+  some = get_fl_motor().getSelectedSensorPosition();
+    SmartDashboard.putNumber("Motor Postion", some);
+    p = SmartDashboard.getNumber("desired P", Constants.fl_kP);
+    i = SmartDashboard.getNumber("desired I", Constants.fl_kI);
+    d = SmartDashboard.getNumber("desired P", Constants.fl_kD);
+    fl.setP(p);
+    fl.setI(i);
+    fl.setD(d);
   }
 
 // Creating my odometry object from the kinematics object and the initial wheel positions.
@@ -165,6 +187,9 @@ public void initMotor(WPI_TalonFX motor, TalonFXConfiguration config){
   //motor.configFactoryDefault();
   motor.setNeutralMode(NeutralMode.Brake);
   motor.configAllSettings(config);
+}
+public TalonFX get_fl_motor(){
+  return frontleft;
 }
 
 public void MechDrive(double x, double y, double z){
@@ -190,6 +215,10 @@ public void drive_by_voltage(double volts){
   backleft.setVoltage(volts);
   backright.setVoltage(volts);
 }
+public void drive_by_pose(double measurement){
+  frontleft.set(ControlMode.Position, measurement);
+}
+
 public void zeroYaw(){
   m_gyro.zeroYaw();
 }
