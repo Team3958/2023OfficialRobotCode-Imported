@@ -29,11 +29,26 @@ public class ArmSwing extends CommandBase {
   public void execute() {
     Arm.move_shoulder(xc.getLeftX()*0.4);
 
+    if (xc.getBButtonPressed()){
+      Arm.move_wrist(0.4);
+    }
+    else if(xc.getYButtonPressed()){
+      Arm.move_wrist(-0.4);
+    }
+    else{
+      Arm.move_wrist(0);
+    }
+
+    Arm.move_extend(xc.getRightY()*0.4);
   }
+
+  
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    Arm.rest_motor();
+  }
 
   // Returns true when the command should end.
   @Override

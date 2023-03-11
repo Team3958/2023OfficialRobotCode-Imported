@@ -35,6 +35,8 @@ public class writst_move extends CommandBase {
     else{
       Arm.move_wrist(0);
     }
+
+    
   }
 
   // Called once the command ends or is interrupted.
