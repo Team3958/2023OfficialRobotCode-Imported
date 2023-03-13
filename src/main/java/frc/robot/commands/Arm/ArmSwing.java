@@ -27,7 +27,12 @@ public class ArmSwing extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Arm.move_shoulder(xc.getLeftX()*0.4);
+    if (xc.getLeftX()< 0){
+      Arm.move_shoulder((xc.getLeftX())*0.1);
+    }
+    else if(xc.getLeftX()>0){
+      Arm.move_shoulder(Math.pow(xc.getLeftX(),2)*0.25);
+    }
 
     if (xc.getBButtonPressed()){
       Arm.move_wrist(0.4);

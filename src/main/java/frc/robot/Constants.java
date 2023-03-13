@@ -83,6 +83,6 @@ public final class Constants {
         public static final int intake2 = 0;
         public static final int XboxPortA = 0;
         public static final int XboxPortB = 0;
-        public static final int XboxPort2 = 0;    
+        public static final int XboxPort2 = 2;    
 
 }

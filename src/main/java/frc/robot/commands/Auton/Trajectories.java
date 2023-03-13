@@ -110,6 +110,7 @@ public class Trajectories {
           Files.lines(trajectoryPath).map(line -> line.split(",")).collect(Collectors.toList());
 
         // Path Planner output format: (t, v, a, x, y, hh, r, h)
+        
         int c = 0;
         double changeInRad;
         double timeStep = 0.01;

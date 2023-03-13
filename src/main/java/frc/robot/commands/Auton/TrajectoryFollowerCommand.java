@@ -182,6 +182,7 @@ public class TrajectoryFollowerCommand extends CommandBase {
         current = (list[i]-min)/ dif;
         list[i] = current;
     }
+    
     System.out.println(list);
 
 
