@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
@@ -110,24 +111,26 @@ public class Trajectories {
           Files.lines(trajectoryPath).map(line -> line.split(",")).collect(Collectors.toList());
 
         // Path Planner output format: (t, v, a, x, y, hh, r, h)
-        
+
         int c = 0;
         double changeInRad;
         double timeStep = 0.01;
         double angularVelocity;
-
+        
+        System.out.println(collect);
         for (String[] s : collect){
+
             if (s[6] == "Infinity"){
-                states.add(new Trajectory.State(Double.parseDouble(s[0]), Double.parseDouble(s[1]), Double.parseDouble(s[2]), new Pose2d(Double.parseDouble(s[3]), -Math.sqrt(2)*Double.parseDouble(s[4]), Rotation2d.fromDegrees(-1*Double.parseDouble(s[5]))), 1/Double.POSITIVE_INFINITY));
+                states.add(new Trajectory.State(Double.parseDouble(s[0]), Double.parseDouble(s[4]), Double.parseDouble(s[5]), new Pose2d(Double.parseDouble(s[1]), -Math.sqrt(2)*Double.parseDouble(s[2]), Rotation2d.fromDegrees(-1*Double.parseDouble(s[3]))), 1/Double.POSITIVE_INFINITY));
             } else {
-                states.add(new Trajectory.State(Double.parseDouble(s[0]), Double.parseDouble(s[1]), Double.parseDouble(s[2]), new Pose2d(Double.parseDouble(s[3]), -Math.sqrt(2)*Double.parseDouble(s[4]), Rotation2d.fromDegrees(-1*Double.parseDouble(s[5]))), 1/Double.parseDouble(s[6])));
+                states.add(new Trajectory.State(Double.parseDouble(s[0]), Double.parseDouble(s[4]), Double.parseDouble(s[5]), new Pose2d(Double.parseDouble(s[1]), -Math.sqrt(2)*Double.parseDouble(s[2]), Rotation2d.fromDegrees(-1*Double.parseDouble(s[3]))), 1/Double.parseDouble(s[7])));
             }
             if (c == 0){
-                headingStates.add(new Trajectory.State(Double.parseDouble(s[0]), 0, 0, new Pose2d(Double.parseDouble(s[3]), -1*Double.parseDouble(s[4]), Rotation2d.fromDegrees(Double.parseDouble(s[7]))), 0));
+                headingStates.add(new Trajectory.State(Double.parseDouble(s[0]), 0, 0, new Pose2d(Double.parseDouble(s[1]), -1*Double.parseDouble(s[2]), Rotation2d.fromDegrees(Double.parseDouble(s[7]))), 0));
             } else {
-                changeInRad = Math.toRadians(Math.abs(Double.parseDouble(s[5])) - Math.abs(Double.parseDouble(collect.get(c-1)[5])));
+                changeInRad = Math.toRadians(Math.abs(Double.parseDouble(s[3])) - Math.abs(Double.parseDouble(collect.get(c-1)[3])));
                 angularVelocity = changeInRad/timeStep;
-                headingStates.add(new Trajectory.State(Double.parseDouble(s[0]), angularVelocity, 0, new Pose2d(Double.parseDouble(s[3]), -1*Double.parseDouble(s[4]), Rotation2d.fromDegrees(Double.parseDouble(s[7]))), 0));
+                headingStates.add(new Trajectory.State(Double.parseDouble(s[0]), angularVelocity, 0, new Pose2d(Double.parseDouble(s[1]), -1*Double.parseDouble(s[2]), Rotation2d.fromDegrees(Double.parseDouble(s[7]))), 0));
             }
             c++;
         }
@@ -160,6 +163,16 @@ public class Trajectories {
     /**
      * Test method to run methods outside of the entire program. Allows for testing trajectories
      */
+    static String swap(String str, int i, int j)
+    {
+        if (j == str.length() - 1)
+            return str.substring(0, i) + str.charAt(j)
+                + str.substring(i + 1, j) + str.charAt(i);
+ 
+        return str.substring(0, i) + str.charAt(j)
+            + str.substring(i + 1, j) + str.charAt(i)
+            + str.substring(j + 1, str.length());
+    }
     public static void main(String[] args) {
     }
 }
