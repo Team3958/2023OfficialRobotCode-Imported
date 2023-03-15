@@ -35,16 +35,16 @@ public class ArmSwing extends CommandBase {
     }
 
     if (xc.getBButtonPressed()){
-      Arm.move_wrist(0.4);
+      Arm.move_wrist(0.1);
     }
     else if(xc.getYButtonPressed()){
-      Arm.move_wrist(-0.4);
+      Arm.move_wrist(-0.1);
     }
     else{
       Arm.move_wrist(0);
     }
 
-    Arm.move_extend(xc.getRightY()*0.4);
+    Arm.move_extend(xc.getRightY()*0.2);
   }
 
   

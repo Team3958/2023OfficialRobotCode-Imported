@@ -50,7 +50,7 @@ public final class Constants {
         public static final double kBackRight_x = -0.875;
 
         // Wheel Gearing
-        public static final double kGearRatio = 10;
+        public static final double kGearRatio = 1/10;
 
         // Speed Constraints
         public static final double kMaxSpeedFeetPerSecond = 5.0;
