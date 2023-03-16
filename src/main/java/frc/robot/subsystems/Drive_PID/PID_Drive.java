@@ -6,12 +6,18 @@ package frc.robot.subsystems.Drive_PID;
 
 import java.util.function.DoubleSupplier;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -29,6 +35,8 @@ public class PID_Drive extends SubsystemBase {
   private final PIDController bl_Controller = new PIDController(Constants.bl_kP, Constants.fl_kI,Constants.bl_kD);
   private final PIDController br_Controller = new PIDController(Constants.br_kP, Constants.br_kI,Constants.br_kD);
 
+  private final PIDController anglePID = new PIDController(Constants.fl_kP, Constants.fl_kI,Constants.fl_kD);
+
   // initial encoder position
   private double fl_E;
   private double fr_E;
@@ -44,6 +52,9 @@ public class PID_Drive extends SubsystemBase {
   private DoubleSupplier bl_goal;
   private DoubleSupplier br_goal;
 
+  // create gyro
+  public AHRS m_gyro = new AHRS(Port.kMXP);
+
   public PID_Drive() {
     motor_init(frontL);
     motor_init(frontR);
@@ -54,6 +65,19 @@ public class PID_Drive extends SubsystemBase {
     fr_E = frontR.getSelectedSensorPosition();
     bl_E = backL.getSelectedSensorPosition();
     br_E = backR.getSelectedSensorPosition();
+
+    backL.setInverted(InvertType.InvertMotorOutput);
+    frontL.setInverted(InvertType.InvertMotorOutput);
+
+    anglePID.enableContinuousInput(0, 360);
+    // angle tolerence is 2 degrees
+    anglePID.setTolerance(2);
+
+    // distance tolerence is 5cm
+    fl_Controller.setTolerance(0.05);
+    fr_Controller.setTolerance(0.05);
+    bl_Controller.setTolerance(0.05);
+    br_Controller.setTolerance(0.05);
     
   }
   double x;
@@ -66,6 +90,7 @@ public class PID_Drive extends SubsystemBase {
       backL.setVoltage(bl_Controller.calculate(get_BL_distance(), bl_goal.getAsDouble()));
       backR.setVoltage(br_Controller.calculate(get_BR_distance(), br_goal.getAsDouble()));
     }*/
+    SmartDashboard.putNumber("encoder", frontL.getSelectedSensorPosition());
   }
   private void motor_init(TalonFX motor){
     motor.configFactoryDefault();
@@ -77,6 +102,13 @@ public class PID_Drive extends SubsystemBase {
     frontR.setVoltage(fr_Controller.calculate(get_FR_distance(), fr));
     backL.setVoltage(bl_Controller.calculate(get_BL_distance(), bl));
     backR.setVoltage(br_Controller.calculate(get_BR_distance(), br));
+  }
+
+  public void turnRun(double angle){
+    frontL.setVoltage(anglePID.calculate(getHeading(), angle));
+    backL.setVoltage(anglePID.calculate(getHeading(),angle));
+    frontR.setVoltage(-anglePID.calculate(getHeading(), angle));
+    backR.setVoltage(-anglePID.calculate(getHeading(), angle));
   }
 
   public double get_FL_distance(){
@@ -91,7 +123,7 @@ public class PID_Drive extends SubsystemBase {
   }
 
   public double get_FR_distance(){
-    double motor_rotation = (frontR.getSelectedSensorPosition() - fr_E)/Constants.kEncoderTicksPerRev;
+    double motor_rotation = (-frontR.getSelectedSensorPosition() - fr_E)/Constants.kEncoderTicksPerRev;
     double wheel_rotaion = motor_rotation* Constants.kGearRatio;
     double distance = 2* Math.PI* Constants.kWheelRadiusMeters * wheel_rotaion;
     return distance;
@@ -149,6 +181,22 @@ public class PID_Drive extends SubsystemBase {
   }
   public boolean atSetpointBR(){
     return br_Controller.atSetpoint();
+  }
+  public boolean atSetpointAngle(){
+    return anglePID.atSetpoint();
+  }
+
+  public double getHeading(){
+    return m_gyro.getAngle();
+  }
+
+  public void resetGyro(double offset){
+    m_gyro.reset();
+    m_gyro.setAngleAdjustment(offset);
+  }
+
+  public void restAnglePID(){
+    anglePID.reset();
   }
 
 

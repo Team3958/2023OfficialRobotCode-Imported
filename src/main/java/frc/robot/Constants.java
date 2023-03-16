@@ -20,7 +20,7 @@ public final class Constants {
 
 //Drivetrain Constants
     public static final int backleft = 03;
-    public static final int frontright = 00;
+    public static final int frontright = 20;
     public static final int backright = 02;
     public static final int frontleft = 01;
     public static final double kF = 0;
