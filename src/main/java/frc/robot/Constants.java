@@ -83,6 +83,27 @@ public final class Constants {
         public static final int intake2 = 0;
         public static final int XboxPortA = 0;
         public static final int XboxPortB = 0;
-        public static final int XboxPort2 = 2;    
+        public static final int XboxPort2 = 2;
+
+
+
+        public static final double turn_kP = 0.2;
+        public static final double turn_kI = 0;
+        public static final double turn_kD = 0;
+
+        public static final double ShoulderP = 0.2;
+        public static final double ShoulderI = 0;
+        public static final double ShoulderD = 0;
+
+        public static final double ExtendP = 0.2;
+        public static final double ExtendI = 0;
+        public static final double ExtendD = 0;
+
+        public static final double WristP = 0.2;
+        public static final double WristI = 0;
+        public static final double WristD = 0;
+
+        public static final int startingLength = 0;
+        public static final int RevPerMeter = 0;    
 
 }

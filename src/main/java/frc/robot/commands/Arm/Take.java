@@ -15,7 +15,7 @@ public class Take extends CommandBase {
     intake = i;
   
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(i);
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +25,7 @@ public class Take extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.Intaking(0.5);
+    intake.Intaking(0.05);
   }
 
   // Called once the command ends or is interrupted.

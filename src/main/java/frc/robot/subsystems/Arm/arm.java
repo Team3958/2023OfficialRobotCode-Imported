@@ -55,15 +55,15 @@ public class arm extends SubsystemBase {
     motor.setNeutralMode(NeutralMode.Brake);
     motor.configAllSettings(config);
   }
-  public void move_shoulder(int direction){
-    shoulder_motor.set(direction*0.3);
+  public void move_shoulder(double d){
+    shoulder_motor.set(d*0.3);
   }
 
-  public void move_extend(int direction){
-    extend_motor.set(direction*0.3);
+  public void move_extend(double d){
+    extend_motor.set(d*0.3);
   }
-  public void move_wrist(int direction){
-    wrist_motor.set(direction*0.3);
+  public void move_wrist(double d){
+    wrist_motor.set(d*0.3);
   }
   public void move_grip(int direction){
     grip_motor.set(direction*0.3);

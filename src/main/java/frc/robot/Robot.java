@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.Auton.MPController;
@@ -49,59 +50,26 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    mpController = new MPController();
-
-    // Sets the path to be driven. 
-    selectedPath = straight;
-
-    for (int i = 0; i < 2; i++){
-      selectedTrajectory[i] = trajectories.getTrajectoryFromCSV(selectedPath)[i];
-    }
-
-    mpController.drive.setupMotorConfigs();
-
-    trajectoryTime = selectedTrajectory[0].getTotalTimeSeconds();
-    m_RobotContainer = new RobotContainer();
-    System.out.println("Total Trajectory Time: " + trajectoryTime + "s");
     
+    m_RobotContainer = new RobotContainer();
+    PortForwarder.add(5800, "10.39.58.11", 5800);
   }
 
   @Override
   public void robotPeriodic() {
-    mpController.drive.putEncoder();
-    mpController.drive.putGyro();
-    SmartDashboard.putNumber("X Pose (Ft): ", Units.metersToFeet(mpController.drive.getPose().getX()));
-    SmartDashboard.putNumber("Y Pose (Ft): ", Units.metersToFeet(mpController.drive.getPose().getY()));
-    SmartDashboard.putNumber("Rotation Pose (Degrees): ", mpController.drive.getPose().getRotation().getDegrees());
-    mpController.drive.putWheelVelocities();
+   
     CommandScheduler.getInstance().run();
   }
 
   @Override
   public void autonomousInit() {
     
-    // Reset encoders
-    mpController.drive.resetEncoders();
+    Command m_autonomousCommand = m_RobotContainer.getAutonomousCommand();
 
-    // Initialize our odometry
-    mpController.drive.initializeOdometry();
-
-    // Ensure our odometry is at 0
-    mpController.drive.reset();
-
-    // Reset odometry to starting point of path
-    mpController.drive.resetOdometry(selectedTrajectory[0].getInitialPose());
-
-    // Update our odometry
-    mpController.drive.periodic();    
-
-    autoCommand = mpController.createTrajectoryFollowerCommand(selectedTrajectory[0], selectedTrajectory[1], 2.5);
-
-    autoCommand.schedule();
-
-    m_autoTimer.reset();
-    m_autoTimer.start();
-  
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
   }
 
   @Override
@@ -126,7 +94,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     // Cancel any commands that were running
-    mpController.drive.setOutputVelocity(new MecanumDriveWheelSpeeds());
+    
     CommandScheduler.getInstance().cancelAll();
   }
 

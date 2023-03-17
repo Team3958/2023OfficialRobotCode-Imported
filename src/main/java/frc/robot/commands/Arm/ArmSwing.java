@@ -34,7 +34,7 @@ public class ArmSwing extends CommandBase {
       Arm.move_shoulder(Math.pow(xc.getLeftX(),2)*0.25);
     }
 
-    if (xc.getBButtonPressed()){
+    if (xc.getXButtonPressed()){
       Arm.move_wrist(0.1);
     }
     else if(xc.getYButtonPressed()){

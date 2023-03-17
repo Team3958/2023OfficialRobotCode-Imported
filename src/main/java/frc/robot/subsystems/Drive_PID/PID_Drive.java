@@ -35,7 +35,7 @@ public class PID_Drive extends SubsystemBase {
   private final PIDController bl_Controller = new PIDController(Constants.bl_kP, Constants.fl_kI,Constants.bl_kD);
   private final PIDController br_Controller = new PIDController(Constants.br_kP, Constants.br_kI,Constants.br_kD);
 
-  private final PIDController anglePID = new PIDController(Constants.fl_kP, Constants.fl_kI,Constants.fl_kD);
+  private final PIDController anglePID = new PIDController(Constants.turn_kP, Constants.turn_kI,Constants.turn_kD);
 
   // initial encoder position
   private double fl_E;
@@ -69,7 +69,7 @@ public class PID_Drive extends SubsystemBase {
     backL.setInverted(InvertType.InvertMotorOutput);
     frontL.setInverted(InvertType.InvertMotorOutput);
 
-    anglePID.enableContinuousInput(0, 360);
+    //anglePID.enableContinuousInput(0, 360);
     // angle tolerence is 2 degrees
     anglePID.setTolerance(2);
 

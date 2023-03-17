@@ -12,6 +12,7 @@ import frc.robot.commands.AutonRoutine;
 import frc.robot.commands.Driving;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Extake;
+import frc.robot.commands.Final_Auton_Drive;
 import frc.robot.commands.PID_Tuning_Command;
 import frc.robot.commands.Take;
 import frc.robot.commands.Arm.ArmSwing;
@@ -54,6 +55,7 @@ public class RobotContainer {
   private final Driving m_driving = new Driving(m_dt, m_driver);
   private final AutonRoutine autoC = new AutonRoutine(m_mpc, m_ads);
   private final ArmSwing m_swinging = new ArmSwing(m_arm, m_operator);
+  private final Final_Auton_Drive m_auton_drive = new Final_Auton_Drive(d, 0, 1, 2);
 
   //private final Command plz = auto; 
 
@@ -94,7 +96,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    System.out.println("THis should no happedn");
-    return autoC;
+    return m_auton_drive;
   }
 }
