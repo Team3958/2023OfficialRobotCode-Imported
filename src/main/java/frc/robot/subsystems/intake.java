@@ -17,6 +17,8 @@ import frc.robot.Constants;
 public class intake extends SubsystemBase {
   /** Creates a new intake. */
   TalonSRX motor1 = new TalonSRX(Constants.intake1);
+  TalonFX motor2 = new TalonFX(Constants.intake2);
+
   // adjust config
   TalonSRXConfiguration config1 = new TalonSRXConfiguration();
       ;
@@ -37,8 +39,10 @@ public class intake extends SubsystemBase {
   }
   public void Intaking(double speed){
     motor1.set(ControlMode.PercentOutput, speed);
+    motor2.set(ControlMode.PercentOutput, speed);
   }
   public void Extaking(double speed){
     motor1.set(ControlMode.PercentOutput, speed);
+    motor2.set(ControlMode.PercentOutput, speed);
   }
 }

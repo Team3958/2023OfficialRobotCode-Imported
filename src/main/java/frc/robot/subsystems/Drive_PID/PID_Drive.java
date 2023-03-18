@@ -71,7 +71,7 @@ public class PID_Drive extends SubsystemBase {
 
     //anglePID.enableContinuousInput(0, 360);
     // angle tolerence is 2 degrees
-    anglePID.setTolerance(2);
+    anglePID.setTolerance(5);
 
     // distance tolerence is 5cm
     fl_Controller.setTolerance(0.05);

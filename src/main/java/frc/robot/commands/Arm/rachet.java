@@ -4,20 +4,20 @@
 
 package frc.robot.commands.Arm;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.arm;
+import frc.robot.subsystems.Arm.servo;
 
-public class ArmMove extends CommandBase {
-  private arm Arm;
+public class rachet extends CommandBase {
+  /** Creates a new rachet. */
+  private servo sv;
   private XboxController xc;
-  /** Creates a new ArmSwing. */
-  public ArmMove(arm a, XboxController x) {
+  public rachet(servo s, XboxController x) {
     // Use addRequirements() here to declare subsystem dependencies.
-    Arm = a;
+    sv = s;
     xc = x;
-    addRequirements(Arm);
-
+    addRequirements(sv);
   }
 
   // Called when the command is initially scheduled.
@@ -27,33 +27,18 @@ public class ArmMove extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (xc.getLeftX()< 0){
-      Arm.move_shoulder((xc.getLeftX())*0.1);
-    }
-    else if(xc.getLeftX()>0){
-      Arm.move_shoulder(Math.pow(xc.getLeftX(),2)*0.2);
-    }
 
-    if (xc.getBButtonPressed()){
-      Arm.move_wrist(0.1);
+    if (xc.getLeftBumper() == true){
+      sv.open();
     }
-    else if(xc.getYButtonPressed()){
-      Arm.move_wrist(-0.1);
+    else if (xc.getRightBumper() == true){
+      sv.close();
     }
-    else{
-      Arm.move_wrist(0);
-    }
-
-    Arm.move_extend(xc.getRightY()*0.2);
   }
-
-  
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    Arm.rest_motor();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

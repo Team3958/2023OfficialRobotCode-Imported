@@ -21,7 +21,7 @@ public final class Constants {
 //Drivetrain Constants
     public static final int backleft = 03;
     public static final int frontright = 20;
-    public static final int backright = 02;
+    public static final int backright = 22;
     public static final int frontleft = 01;
     public static final double kF = 0;
     public static final double kP = 0;
@@ -31,9 +31,11 @@ public final class Constants {
 //Arm Constants
     public static final int shoulder1 = 5;
     public static final int shoulder2 = 6;
-    public static final int extend = 0;
-    public static final int wrist = 0;
-    public static final int grip = 0;
+    public static final int extend = 12;
+    public static final int wrist = 17;
+    public static final int intake1 = 4;
+    public static final int intake2 = 2;
+   
 
     public static final double kWheelRadiusInches = 3;
         public static final double kWheelRadiusMeters = 0.0762;
@@ -79,8 +81,7 @@ public final class Constants {
         public static final double kA = 0.0755;// 0.0755
 
         
-        public static final int intake1 = 0;
-        public static final int intake2 = 0;
+        
         public static final int XboxPortA = 0;
         public static final int XboxPortB = 0;
         public static final int XboxPort2 = 2;
@@ -104,6 +105,7 @@ public final class Constants {
         public static final double WristD = 0;
 
         public static final int startingLength = 0;
-        public static final int RevPerMeter = 0;    
+        public static final int RevPerMeter = 0;
+        public static final int ServoPort = 0;    
 
 }
