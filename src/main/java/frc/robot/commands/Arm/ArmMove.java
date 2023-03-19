@@ -28,17 +28,17 @@ public class ArmMove extends CommandBase {
   @Override
   public void execute() {
     if (xc.getLeftX()< 0){
-      Arm.move_shoulder((xc.getLeftX())*0.1);
+      Arm.move_shoulder((xc.getLeftX())*0.5);
     }
     else if(xc.getLeftX()>0){
-      Arm.move_shoulder(Math.pow(xc.getLeftX(),2)*0.2);
+      Arm.move_shoulder(xc.getLeftX()*0.5);
     }
 
-    if (xc.getBButtonPressed()){
-      Arm.move_wrist(0.1);
+    if (xc.getAButtonPressed() == true){
+      Arm.move_wrist(0.3);
     }
-    else if(xc.getYButtonPressed()){
-      Arm.move_wrist(-0.1);
+    else if(xc.getYButtonPressed()== true){
+      Arm.move_wrist(-0.3);
     }
     else{
       Arm.move_wrist(0);

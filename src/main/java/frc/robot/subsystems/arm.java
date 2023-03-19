@@ -41,10 +41,12 @@ public class arm extends SubsystemBase {
       //init_arm_motor(shoulder_motor, config1);
       init_arm_motor(shoulder2_motor);
       shoulder2_motor.follow(shoulder_motor);
+      shoulder2_motor.setInverted(true);
 
       init_arm_motor(extend_motor);
 
       init_arm_motor(wrist_motor);
+      wrist_motor.setNeutralMode(NeutralMode.Coast);
 
       //init_arm_motor(intake1_motor);
       //init_arm_motor(intake2_motor);

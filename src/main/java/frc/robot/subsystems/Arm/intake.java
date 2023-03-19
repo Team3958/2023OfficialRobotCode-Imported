@@ -25,7 +25,6 @@ public class intake extends SubsystemBase {
   public intake() {
     motorinit(motor1, config1);
 
-
   }
 
   @Override

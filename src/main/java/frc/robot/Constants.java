@@ -16,7 +16,11 @@ public final class Constants {
 
 //Xbox Constants
     public static final int XboxPort = 1;
-    public static final int Y = 4;
+    public static final int XboxPort2 = 2;
+    public static final int XboxPortY = 4;
+    public static final int XboxPortA = 5;
+    public static final int XboxPortB = 2;
+    public static final int XboxPortX = 3; 
 
 //Drivetrain Constants
     public static final int backleft = 03;
@@ -82,9 +86,7 @@ public final class Constants {
 
         
         
-        public static final int XboxPortA = 0;
-        public static final int XboxPortB = 0;
-        public static final int XboxPort2 = 2;
+
 
 
 
@@ -106,6 +108,7 @@ public final class Constants {
 
         public static final int startingLength = 0;
         public static final int RevPerMeter = 0;
-        public static final int ServoPort = 0;    
+        public static final int ServoPort = 0;
+           
 
 }

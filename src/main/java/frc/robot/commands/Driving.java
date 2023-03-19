@@ -39,7 +39,7 @@ public class Driving extends CommandBase {
   @Override
   public void execute() {
 
-    dt.MechDrive(-xc.getRightX(), -xc.getLeftX(), xc.getRightY());
+    dt.MechDrive(-xc.getLeftY(), xc.getRightX(), xc.getLeftX());
 
   }
 

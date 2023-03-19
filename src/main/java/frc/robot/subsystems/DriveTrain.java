@@ -219,8 +219,19 @@ public void drive_by_pose(double measurement){
   frontleft.set(ControlMode.Position, measurement);
 }
 
+public void drive_by_percent(double output){
+  frontleft.set(ControlMode.PercentOutput, output);
+  frontright.set(ControlMode.PercentOutput, output);
+  backleft.set(ControlMode.PercentOutput, output);
+  backright.set(ControlMode.PercentOutput, output);
+}
+
 public void zeroYaw(){
   m_gyro.zeroYaw();
+}
+
+public void zero(){
+  m_gyro.reset();
 }
 
 public double getAngle(){

@@ -2,41 +2,51 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Arm;
+package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm.intake;
+import frc.robot.subsystems.DriveTrain;
 
-public class Take extends CommandBase {
-  /** Creates a new Take. */
-  intake intake;
-  public Take(intake i) {
-    intake = i;
-  
+public class last_try_auton extends CommandBase {
+  /** Creates a new last_try_auton. */
+  private DriveTrain dt;
+  private Timer watch;
+  public last_try_auton(DriveTrain d) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intake);
+    dt = d;
+    addRequirements(dt);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    watch = new Timer();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.Intaking(0.35);
+    if (watch.get() < 1){
+      dt.MechDrive(0.3, 0, 0);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.Intaking(0);
+    dt.MechDrive(0, 0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (watch.get()>4){
+      return true;
+    }
+    
+    else{
+      return false;
+    }
   }
 }
