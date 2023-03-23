@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.Driving;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Extake;
 import frc.robot.commands.Final_Auton_Drive;
@@ -18,6 +17,11 @@ import frc.robot.commands.last_try_auton;
 import frc.robot.commands.pray_for_ramp;
 import frc.robot.commands.Arm.ArmSwing;
 import frc.robot.commands.Arm.rachet;
+import frc.robot.commands.Driving.DriveToDistance;
+import frc.robot.commands.Driving.Driving;
+import frc.robot.commands.Driving.StrafeToDistance;
+import frc.robot.commands.Driving.TurnToAngle;
+import frc.robot.commands.Driving.drive_by_encoder;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.arm;
@@ -58,7 +62,10 @@ public class RobotContainer {
   private final rachet m_RachetComand = new rachet(m_Servo, m_operator);
   private final last_try_auton plz_God = new last_try_auton(m_dt);
   private final pray_for_ramp ramp = new pray_for_ramp(m_dt);
-
+  private final DriveToDistance m_dtd = new DriveToDistance(m_dt, 3.0);
+  private final StrafeToDistance m_std = new StrafeToDistance(m_dt, ()-> 3.0);
+  private final TurnToAngle m_tta = new TurnToAngle(m_dt, ()-> 90);
+  private final drive_by_encoder m_d = new drive_by_encoder(m_dt, 1);
 
   //private final Command plz = auto; 
 
@@ -81,14 +88,22 @@ public class RobotContainer {
     m_dt.setDefaultCommand(m_driving);
     //m_dt.setDefaultCommand(tuning);
     m_arm.setDefaultCommand(m_swinging);
-    m_Servo.setDefaultCommand(m_RachetComand);
+    //m_Servo.setDefaultCommand(m_RachetComand);
 
     new JoystickButton(m_operator, Constants.XboxPortB)
       .toggleOnTrue(m_take);
 
     new JoystickButton(m_operator, Constants.XboxPortX)
       .toggleOnTrue(m_extake);
+
+    new JoystickButton(m_driver, Constants.XboxPortA)
+      .toggleOnTrue(m_dtd);
     
+    new JoystickButton(m_driver, Constants.XboxPortB)
+      .toggleOnTrue(m_std);
+
+    new JoystickButton(m_driver, Constants.XboxPortY)
+      .toggleOnTrue(m_tta);
 
   }
 
@@ -99,6 +114,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return ramp;
+    return m_d;
   }
 }

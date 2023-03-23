@@ -21,6 +21,7 @@ import com.ctre.phoenixpro.configs.Slot0Configs;
 import com.ctre.phoenixpro.configs.VoltageConfigs;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -120,7 +121,7 @@ MecanumDrive m_drive;
     initMotor(frontright,config1);
     initMotor(backright, config1);
     
-    m_drive =  new MecanumDrive(frontleft, backleft, backright, frontright);
+    //m_drive =  new MecanumDrive(frontleft, backleft, backright, frontright);
   
     backleft.setInverted(true);
     frontleft.setInverted(true);
@@ -155,18 +156,10 @@ MecanumDrive m_drive;
   SmartDashboard.putNumber("backLeft speed", backleft.getMotorOutputPercent());
   SmartDashboard.putNumber("backRight speed", backright.getMotorOutputPercent());
 
+  SmartDashboard.putNumber("x", getCurrentX());
+  SmartDashboard.putNumber("y", getCurrentY());
 
-
-
-  drive_by_voltage(fl.calculate(0));
-  some = get_fl_motor().getSelectedSensorPosition();
-    SmartDashboard.putNumber("Motor Postion", some);
-    p = SmartDashboard.getNumber("desired P", Constants.fl_kP);
-    i = SmartDashboard.getNumber("desired I", Constants.fl_kI);
-    d = SmartDashboard.getNumber("desired P", Constants.fl_kD);
-    fl.setP(p);
-    fl.setI(i);
-    fl.setD(d);
+  SmartDashboard.putNumber("fl encoder value", get_fl_encoder());
   }
 
 // Creating my odometry object from the kinematics object and the initial wheel positions.
@@ -187,18 +180,71 @@ public void initMotor(WPI_TalonFX motor, TalonFXConfiguration config){
   //motor.configFactoryDefault();
   motor.setNeutralMode(NeutralMode.Brake);
   motor.configAllSettings(config);
+  motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,0,0);
+  motor.enableVoltageCompensation(true);
+  motor.configVoltageCompSaturation(8);
 }
 public TalonFX get_fl_motor(){
   return frontleft;
 }
 
-public void MechDrive(double x, double y, double z){
+/*public void MechDrive(double x, double y, double z){
   //x = Math.pow(x, 3) ;
   //y = Math.pow(y, 3) ;
   //z = Math.pow(z, 3) ;
   m_drive.driveCartesian(x, y, z);
+}*/
+  public double get_fl_encoder(){
+    return frontleft.getSelectedSensorPosition(); 
+  }
+  public double get_fr_encoder(){
+    return frontright.getSelectedSensorPosition(); 
+  }
+  public double get_bl_encoder(){
+    return backleft.getSelectedSensorPosition(); 
+  }
+  public double get_br_encoder(){
+    return backright.getSelectedSensorPosition(); 
+  }
 
+  public double tick_to_distance(double ticks){
+    double motor_rotation = ticks /Constants.kEncoderTicksPerRev;
+    double wheel_rotaion = motor_rotation* Constants.kGearRatio;
+    double distance = 2* Math.PI* Constants.kWheelRadiusMeters * wheel_rotaion;
+    return distance;
+  } 
+
+  public void telop_drive(double x, double y, double z){
+    double fl_drive = x + y+ z;
+    double fr_drive = x - y- z;
+    double bl_drive = x - y+ z;
+    double br_drive = x + y-z;
+    double sum = Math.abs(br_drive) + Math.abs(fl_drive) + Math.abs(bl_drive) + Math.abs(fr_drive);
+  
+    /*fl_drive/= 3;
+    fr_drive/=3;
+    bl_drive/=3;
+    br_drive/=3;*/
+
+    MathUtil.clamp(fl_drive, -1, 1);
+    MathUtil.clamp(fr_drive, -1, 1);
+    MathUtil.clamp(bl_drive, -1, 1);
+    MathUtil.clamp(br_drive, -1, 1);
+
+
+    if (sum == 0){
+      frontleft.set(ControlMode.PercentOutput, 0);
+      frontright.set(ControlMode.PercentOutput, 0);
+      backleft.set(ControlMode.PercentOutput, 0);
+      backright.set(ControlMode.PercentOutput, 0);
+    }
+
+    frontleft.set(ControlMode.PercentOutput, fl_drive);
+    frontright.set(ControlMode.PercentOutput, fr_drive);
+    backleft.set(ControlMode.PercentOutput, bl_drive);
+    backright.set(ControlMode.PercentOutput, fl_drive);
 }
+
 public void VelocityMode(int speed){
     frontleft.set(ControlMode.Velocity, speed);
     frontright.set(ControlMode.Velocity, speed);
@@ -209,21 +255,21 @@ public void VelocityMode(int speed){
 public Rotation2d getRotation2d(){
   return m_gyro.getRotation2d();
 }
-public void drive_by_voltage(double volts){
+/*public void drive_by_voltage(double volts){
   frontleft.setVoltage(volts);
   frontright.setVoltage(volts);
   backleft.setVoltage(volts);
   backright.setVoltage(volts);
-}
+}*/
 public void drive_by_pose(double measurement){
   frontleft.set(ControlMode.Position, measurement);
 }
 
-public void drive_by_percent(double output){
-  frontleft.set(ControlMode.PercentOutput, output);
-  frontright.set(ControlMode.PercentOutput, output);
-  backleft.set(ControlMode.PercentOutput, output);
-  backright.set(ControlMode.PercentOutput, output);
+public void drive_by_percent(double output1,double output2, double output3, double output4){
+  frontleft.set(ControlMode.PercentOutput, output1);
+  frontright.set(ControlMode.PercentOutput, output2);
+  backleft.set(ControlMode.PercentOutput, output3);
+  backright.set(ControlMode.PercentOutput, output4);
 }
 
 public void zeroYaw(){
@@ -248,6 +294,22 @@ public double getPitch(){
 
 public double getRoll(){
   return m_gyro.getRoll();
+}
+
+public double getCurrentX(){
+  return m_odometry.getPoseMeters().getX();
+}
+
+public double getCurrentY(){
+  return m_odometry.getPoseMeters().getY();
+}
+
+
+public void tankish_drive(double L, double R){
+  frontleft.set(ControlMode.PercentOutput, L);
+  backleft.set(ControlMode.PercentOutput, L);
+  frontright.set(ControlMode.PercentOutput, R);
+  backright.set(ControlMode.PercentOutput, R);
 }
 
 }

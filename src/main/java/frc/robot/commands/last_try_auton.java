@@ -28,14 +28,14 @@ public class last_try_auton extends CommandBase {
   @Override
   public void execute() {
     if (watch.get() < 1){
-      dt.MechDrive(0.3, 0, 0);
+      dt.telop_drive(0, 0, 0);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    dt.MechDrive(0, 0, 0);
+    dt.telop_drive(0, 0, 0);
   }
 
   // Returns true when the command should end.

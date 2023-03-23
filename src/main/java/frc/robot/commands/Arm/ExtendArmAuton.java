@@ -27,7 +27,7 @@ public class ExtendArmAuton extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Arm.ExtendToLength(goalLength);
+   // Arm.ExtendToLength(goalLength);
   }
 
   // Called once the command ends or is interrupted.

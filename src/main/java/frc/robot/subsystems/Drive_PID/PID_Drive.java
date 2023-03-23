@@ -6,9 +6,8 @@ package frc.robot.subsystems.Drive_PID;
 
 import java.util.function.DoubleSupplier;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -91,13 +90,14 @@ public class PID_Drive extends SubsystemBase {
       backR.setVoltage(br_Controller.calculate(get_BR_distance(), br_goal.getAsDouble()));
     }*/
     SmartDashboard.putNumber("encoder", frontL.getSelectedSensorPosition());
+    SmartDashboard.putNumber("fl pid output", fl_Controller.calculate(get_FL_distance()));
   }
   private void motor_init(TalonFX motor){
     motor.configFactoryDefault();
     motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,0,0);
   }
 
-  public void run(double fl,  double fr, double bl, double br){
+  /*public void run(double fl,  double fr, double bl, double br){
     frontL.setVoltage(fl_Controller.calculate(get_FL_distance(), fl));
     frontR.setVoltage(fr_Controller.calculate(get_FR_distance(), fr));
     backL.setVoltage(bl_Controller.calculate(get_BL_distance(), bl));
@@ -109,7 +109,7 @@ public class PID_Drive extends SubsystemBase {
     backL.setVoltage(anglePID.calculate(getHeading(),angle));
     frontR.setVoltage(-anglePID.calculate(getHeading(), angle));
     backR.setVoltage(-anglePID.calculate(getHeading(), angle));
-  }
+  } */
 
   public double get_FL_distance(){
     double motor_rotation = (frontL.getSelectedSensorPosition()- fl_E)/Constants.kEncoderTicksPerRev;
@@ -197,6 +197,20 @@ public class PID_Drive extends SubsystemBase {
 
   public void restAnglePID(){
     anglePID.reset();
+  }
+// needs testing
+  public void drive_by_magic(double setpoint){
+    fl_Controller.setSetpoint(setpoint);
+    frontL.set(ControlMode.MotionMagic, fl_Controller.calculate(get_FL_distance()), DemandType.AuxPID, fl_Controller.getSetpoint());
+
+    fr_Controller.setSetpoint(setpoint);
+    frontR.set(ControlMode.MotionMagic, fl_Controller.calculate(get_FR_distance()), DemandType.AuxPID, fl_Controller.getSetpoint());
+
+    bl_Controller.setSetpoint(setpoint);
+    backL.set(ControlMode.MotionMagic, fl_Controller.calculate(get_BL_distance()), DemandType.AuxPID, fl_Controller.getSetpoint());
+
+    br_Controller.setSetpoint(setpoint);
+    backR.set(ControlMode.MotionMagic, fl_Controller.calculate(get_BR_distance()), DemandType.AuxPID, fl_Controller.getSetpoint());
   }
 
 

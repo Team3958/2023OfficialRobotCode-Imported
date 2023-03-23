@@ -34,7 +34,7 @@ public class Final_Auton_Drive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    dt.run(y, y, y, y);
+   // dt.run(y, y, y, y);
   }
 
   // Called once the command ends or is interrupted.

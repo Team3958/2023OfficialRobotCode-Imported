@@ -43,7 +43,7 @@ public final class Constants {
 
     public static final double kWheelRadiusInches = 3;
         public static final double kWheelRadiusMeters = 0.0762;
-        public static final int kEncoderTicksPerRev = 2048;
+        public static final int kEncoderTicksPerRev = 4096;
 
         // Wheel positions in FEET
         public static final double kFrontRight_y = -1;

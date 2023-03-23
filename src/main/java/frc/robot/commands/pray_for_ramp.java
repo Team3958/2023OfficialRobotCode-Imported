@@ -10,9 +10,10 @@ import frc.robot.subsystems.DriveTrain;
 public class pray_for_ramp extends CommandBase {
   /** Creates a new pray_for_ramp. */
   private DriveTrain dt;
-  private boolean flag = false;
+  private boolean flag_start = true;
+  private boolean flag_on_ramp = false;
   // degrees of tolerance
-  private double tolerance = 1;
+  private double tolerance = 2;
   //goal
   private final double dropped_ramp_angle = 15;
 
@@ -35,22 +36,28 @@ public class pray_for_ramp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Math.abs(dt.getPitch()) > tolerance){
-      flag = true;
-    }
-    else if (Math.abs(dt.getPitch()) < tolerance) {
-      flag = false;
-    }
-    if (flag == true){
+    if (flag_on_ramp == true){
       error = dt.getPitch() / dropped_ramp_angle;
-      dt.drive_by_percent(p*error);
+      //dt.drive_by_percent(p*error);
     }
-  }
+
+    else if (Math.abs(dt.getPitch()) > tolerance){
+      flag_on_ramp = true;
+      flag_start = false;
+    }
+    else if (Math.abs(dt.getPitch()) <  tolerance){
+      flag_on_ramp = false;
+    }
+    if (flag_start == true){
+      //dt.drive_by_percent(p);
+    }
+
+  };
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    dt.drive_by_percent(0);
+    //dt.drive_by_percent(0);
   }
 
   // Returns true when the command should end.

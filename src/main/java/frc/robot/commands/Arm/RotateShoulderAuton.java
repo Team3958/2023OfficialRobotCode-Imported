@@ -30,7 +30,7 @@ public class RotateShoulderAuton extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Arm.ShoulderRotateToAngle(goalAngle);
+   // Arm.ShoulderRotateToAngle(goalAngle);
   }
 
   // Called once the command ends or is interrupted.

@@ -69,7 +69,7 @@ public class PID_Arm extends SubsystemBase {
     motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor,0,0);
   }
 
-  public void ShoulderRotateToAngle(Double goalAngle){
+  /*public void ShoulderRotateToAngle(Double goalAngle){
     ShoulderLeft.setVoltage(ShoulderPID.calculate(SLgetAngle(), goalAngle));
     ShoulderRight.setVoltage(ShoulderPID.calculate(SRgetAngle(), goalAngle));
   }
@@ -77,7 +77,7 @@ public class PID_Arm extends SubsystemBase {
   public void ExtendToLength(Double goalLength){
     Extension.setVoltage(ExtensionPID.calculate(GetExtendLength(), goalLength));
   }
-
+*/
   public void WristRotateToAngle(Double goalAngle){
     Wrist.setVoltage(WristPID.calculate(WrgetAngle(), goalAngle));
   }
