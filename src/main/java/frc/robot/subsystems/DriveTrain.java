@@ -160,6 +160,7 @@ MecanumDrive m_drive;
   SmartDashboard.putNumber("y", getCurrentY());
 
   SmartDashboard.putNumber("fl encoder value", get_fl_encoder());
+  SmartDashboard.putNumber("fl distance travelled", tick_to_distance(get_fl_encoder()));
   }
 
 // Creating my odometry object from the kinematics object and the initial wheel positions.

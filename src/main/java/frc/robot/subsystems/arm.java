@@ -64,6 +64,9 @@ public class arm extends SubsystemBase {
   public void init_arm_motor( WPI_TalonFX motor){
     motor.configFactoryDefault();
     motor.setNeutralMode(NeutralMode.Brake);
+    motor.enableVoltageCompensation(true);
+    motor.configVoltageCompSaturation(8);
+    motor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     
   }
   public void move_shoulder(double direction){
@@ -84,5 +87,23 @@ public class arm extends SubsystemBase {
     extend_motor.set(0);
     wrist_motor.set(0);
     intake1_motor.set(0);
+  }
+  public double get_extend_encoder(){
+    return extend_motor.getSelectedSensorPosition();
+  }
+  public double get_shoulder1_encoder(){
+    return shoulder_motor.getSelectedSensorPosition();
+  }
+  public double get_shoulder2_encoder(){
+    return shoulder2_motor.getSelectedSensorPosition();
+  }
+
+  public double extension_ticks_to_inches(double tick){
+    double motorRotations = tick / Constants.kEncoderTicksPerRev;
+    double extened = Math.PI/2 *motorRotations;
+    return extened;
+  }
+  public double tick_to_rads(double ticks){
+    return ticks/ Constants.kEncoderTicksPerRev * Constants.shoulder_gear_ratio;
   }
 }

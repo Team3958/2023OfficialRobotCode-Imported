@@ -43,7 +43,7 @@ public final class Constants {
 
     public static final double kWheelRadiusInches = 3;
         public static final double kWheelRadiusMeters = 0.0762;
-        public static final int kEncoderTicksPerRev = 4096;
+        public static final int kEncoderTicksPerRev = 2048;
 
         // Wheel positions in FEET
         public static final double kFrontRight_y = -1;
@@ -56,7 +56,9 @@ public final class Constants {
         public static final double kBackRight_x = -0.875;
 
         // Wheel Gearing
-        public static final double kGearRatio = 1/10;
+        public static final double kGearRatio = 0.1;
+        public static final double shoulder_gear_ratio = 0.0089285714; //  1/112
+        public static final double should_range_of_motion = 105; //degrees
 
         // Speed Constraints
         public static final double kMaxSpeedFeetPerSecond = 5.0;
@@ -109,6 +111,7 @@ public final class Constants {
         public static final int startingLength = 0;
         public static final int RevPerMeter = 0;
         public static final int ServoPort = 0;
+        public static final double G_conpensate = 0.06; // tune this later
            
 
 }

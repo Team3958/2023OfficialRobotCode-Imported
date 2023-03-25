@@ -4,21 +4,22 @@
 
 package frc.robot.commands.AutonRoutines;
 
-import edu.wpi.first.hal.simulation.RoboRioDataJNI;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.Robot;
-
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Driving.drive_by_encoder;
+import frc.robot.subsystems.DriveTrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class masterAutonCommand extends ParallelCommandGroup {
-  /** Creates a new masterAutonCommand. */
-  public masterAutonCommand(Command drive, Timer mTimer) {
+public class side_score_and_taxi extends SequentialCommandGroup {
+  /** Creates a new side_score_and_taxi. */
+  
+  public side_score_and_taxi(DriveTrain dt) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(drive);
+    addCommands(
+      // score cude
+      new drive_by_encoder(dt, -2)// taxi out
+      ); 
   }
 }

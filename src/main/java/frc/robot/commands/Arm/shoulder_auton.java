@@ -4,49 +4,47 @@
 
 package frc.robot.commands.Arm;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm.PID_Arm;
+import frc.robot.Constants;
+import frc.robot.subsystems.arm;
 
-public class RotateWristAuton extends CommandBase {
-  PID_Arm Arm;
-  double goalAngle;
+public class shoulder_auton extends CommandBase {
+  /** Creates a new shoulder_auton. */
+  private arm arm;
+  private double error;
+  private double tolerence = 0.07;
 
-  /** Creates a new RotateWristAuton. */
-  public RotateWristAuton(PID_Arm A, double ga) {
-
-    Arm = A;
-    goalAngle = ga;
+  public shoulder_auton(arm a) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(A);
+    arm =a;
+    addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    Arm.resetGyro();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Arm.WristRotateToAngle(goalAngle);
+    error = (Math.PI/3)- (arm.tick_to_rads(arm.get_shoulder1_encoder()))/ (Math.PI/3);
+    MathUtil.clamp(error, -4, 0.4);
+    arm.move_shoulder(error);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Arm.DisableWristPIDControl();
+    arm.move_shoulder(Constants.G_conpensate);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Arm.WristatSetpoint() == true){
-      Arm.DisableWristPIDControl();
+    if (error< tolerence){
       return true;
     }
-    else {
-      return false;
-    }
+    return false;
   }
 }

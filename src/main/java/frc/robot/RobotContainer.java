@@ -65,7 +65,7 @@ public class RobotContainer {
   private final DriveToDistance m_dtd = new DriveToDistance(m_dt, 3.0);
   private final StrafeToDistance m_std = new StrafeToDistance(m_dt, ()-> 3.0);
   private final TurnToAngle m_tta = new TurnToAngle(m_dt, ()-> 90);
-  private final drive_by_encoder m_d = new drive_by_encoder(m_dt, 1);
+  private final drive_by_encoder m_d = new drive_by_encoder(m_dt, 2.0);
 
   //private final Command plz = auto; 
 
@@ -114,6 +114,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_d;
+    return m_tta;
   }
 }

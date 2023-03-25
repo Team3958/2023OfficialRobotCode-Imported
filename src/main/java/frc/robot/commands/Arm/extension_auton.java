@@ -4,47 +4,55 @@
 
 package frc.robot.commands.Arm;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm.PID_Arm;
+import frc.robot.subsystems.arm;
 
-public class ExtendArmAuton extends CommandBase {
-  PID_Arm Arm;
-  double goalLength;
+public class extension_auton extends CommandBase {
+  /** Creates a new extension_auton. */
+  private arm arm;
+  private double start_extend;
+  private final double goal = 25;
+  private final double tolerance = 0.10;
+  private double error;
 
-  /** Creates a new ExtendArmAuton. */
-  public ExtendArmAuton(PID_Arm A, double gl) {
 
-    Arm = A;
-    goalLength = gl;
+  public extension_auton(arm ar) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(A);
+    arm  = ar;
+    addRequirements(arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    start_extend =  arm.get_extend_encoder();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   // Arm.ExtendToLength(goalLength);
+    double current_extend =  arm.extension_ticks_to_inches(arm.get_extend_encoder());
+    error = (goal - current_extend)/goal;
+
+    MathUtil.clamp(error,-.45 ,0.45);
+
+    arm.move_extend(error);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Arm.DisableExtensionPIDControl();
+    arm.move_extend(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Arm.ExtenderatSetpoint() == true){
-      Arm.DisableExtensionPIDControl();
+    if (error < tolerance){
       return true;
     }
-    else {
-      return false;
-    }
+    return false;
   }
 }
