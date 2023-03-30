@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm.servo;
 
-public class rachet extends CommandBase {
+public class rachetOpen extends CommandBase {
   /** Creates a new rachet. */
   private servo sv;
   private XboxController xc;
-  public rachet(servo s, XboxController x) {
+  public rachetOpen(servo s, XboxController x) {
     // Use addRequirements() here to declare subsystem dependencies.
     sv = s;
     xc = x;
@@ -27,13 +27,8 @@ public class rachet extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    if (xc.getLeftBumper() == true){
-      sv.open();
-    }
-    else if (xc.getRightBumper() == true){
-      sv.close();
-    }
+    sv.open();
+    
   }
 
   // Called once the command ends or is interrupted.

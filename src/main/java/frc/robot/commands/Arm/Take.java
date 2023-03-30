@@ -25,7 +25,7 @@ public class Take extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.Intaking(0.35);
+    intake.Intaking(0.30);
   }
 
   // Called once the command ends or is interrupted.

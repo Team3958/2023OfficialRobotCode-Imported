@@ -227,19 +227,13 @@ public TalonFX get_fl_motor(){
     bl_drive/=3;
     br_drive/=3;*/
 
-    MathUtil.clamp(fl_drive, -1, 1);
-    MathUtil.clamp(fr_drive, -1, 1);
-    MathUtil.clamp(bl_drive, -1, 1);
-    MathUtil.clamp(br_drive, -1, 1);
+    /*fl_drive = MathUtil.clamp(fl_drive, -1, 1);
+    fr_drive = MathUtil.clamp(fr_drive, -1, 1);
+    bl_drive = MathUtil.clamp(bl_drive, -1, 1);
+    br_drive = MathUtil.clamp(br_drive, -1, 1);*/
 
 
-    if (sum == 0){
-      frontleft.set(ControlMode.PercentOutput, 0);
-      frontright.set(ControlMode.PercentOutput, 0);
-      backleft.set(ControlMode.PercentOutput, 0);
-      backright.set(ControlMode.PercentOutput, 0);
-    }
-
+    
     frontleft.set(ControlMode.PercentOutput, fl_drive);
     frontright.set(ControlMode.PercentOutput, fr_drive);
     backleft.set(ControlMode.PercentOutput, bl_drive);

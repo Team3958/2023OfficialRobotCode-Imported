@@ -19,7 +19,7 @@ public class servo extends SubsystemBase {
   }
 
   public void open(){
-    lock.setAngle(15);
+    lock.setAngle(30);
   }
 
   public void close(){

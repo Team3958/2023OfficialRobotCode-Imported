@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -39,13 +41,15 @@ public class arm extends SubsystemBase {
     TalonSRXConfiguration config1 = new TalonSRXConfiguration();
       config1.primaryPID.selectedFeedbackSensor = FeedbackDevice.QuadEncoder ;
       //init_arm_motor(shoulder_motor, config1);
-      init_arm_motor(shoulder2_motor);
+      init_arm_motor(shoulder_motor);
       shoulder2_motor.follow(shoulder_motor);
       shoulder2_motor.setInverted(true);
 
       init_arm_motor(extend_motor);
 
       init_arm_motor(wrist_motor);
+
+
       wrist_motor.setNeutralMode(NeutralMode.Coast);
 
       //init_arm_motor(intake1_motor);
@@ -71,6 +75,7 @@ public class arm extends SubsystemBase {
   }
   public void move_shoulder(double direction){
     shoulder_motor.set(direction);
+    shoulder2_motor.set(direction);
   }
 
   public void move_extend(double direction){
@@ -100,10 +105,16 @@ public class arm extends SubsystemBase {
 
   public double extension_ticks_to_inches(double tick){
     double motorRotations = tick / Constants.kEncoderTicksPerRev;
-    double extened = Math.PI/2 *motorRotations;
+    double extened = Math.PI/2 *motorRotations * Constants.extend_gear_ratio;
     return extened;
   }
   public double tick_to_rads(double ticks){
     return ticks/ Constants.kEncoderTicksPerRev * Constants.shoulder_gear_ratio;
+  }
+  public double rads_to_ticks(double rad){
+    return rad * Constants.kEncoderTicksPerRev / Constants.shoulder_gear_ratio;
+  }
+  public void move_by_magic(double out, double target){
+    shoulder_motor.set(ControlMode.MotionMagic, out, DemandType.AuxPID, target);
   }
 }

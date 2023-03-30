@@ -12,14 +12,15 @@ public class extension_auton extends CommandBase {
   /** Creates a new extension_auton. */
   private arm arm;
   private double start_extend;
-  private final double goal = 25;
-  private final double tolerance = 0.10;
+  private final double goal; // 25 max
+  private final double tolerance = 0.03;
   private double error;
 
 
-  public extension_auton(arm ar) {
+  public extension_auton(arm ar, double GOAL) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm  = ar;
+    goal = GOAL;
     addRequirements(arm);
   }
 
@@ -32,10 +33,11 @@ public class extension_auton extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double current_extend =  arm.extension_ticks_to_inches(arm.get_extend_encoder());
+    double current_extend =  arm.extension_ticks_to_inches(arm.get_extend_encoder()-start_extend);
     error = (goal - current_extend)/goal;
 
-    MathUtil.clamp(error,-.45 ,0.45);
+    error = MathUtil.clamp(error,-0.5 ,0.5);
+    System.out.println(error);
 
     arm.move_extend(error);
 
@@ -50,9 +52,9 @@ public class extension_auton extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (error < tolerance){
+    /*if (error < tolerance){
       return true;
-    }
+    }*/
     return false;
   }
 }

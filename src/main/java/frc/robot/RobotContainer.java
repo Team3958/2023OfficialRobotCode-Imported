@@ -16,7 +16,11 @@ import frc.robot.commands.Take;
 import frc.robot.commands.last_try_auton;
 import frc.robot.commands.pray_for_ramp;
 import frc.robot.commands.Arm.ArmSwing;
-import frc.robot.commands.Arm.rachet;
+import frc.robot.commands.Arm.closeRac;
+import frc.robot.commands.Arm.extension_auton;
+import frc.robot.commands.Arm.openRac;
+import frc.robot.commands.Arm.rachetOpen;
+import frc.robot.commands.Arm.shoulder_auton;
 import frc.robot.commands.Driving.DriveToDistance;
 import frc.robot.commands.Driving.Driving;
 import frc.robot.commands.Driving.StrafeToDistance;
@@ -25,6 +29,7 @@ import frc.robot.commands.Driving.drive_by_encoder;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.arm;
+import frc.robot.subsystems.i2c;
 import frc.robot.subsystems.intake;
 import frc.robot.subsystems.Arm.servo;
 import frc.robot.subsystems.Drive_PID.PID_Drive;
@@ -49,6 +54,7 @@ public class RobotContainer {
   private final Robot robot = new Robot();
   private final arm m_arm = new arm();
   private final servo m_Servo = new servo();
+  private final i2c m_port = new i2c();
 
 
   private final PID_Drive d = new PID_Drive();
@@ -59,14 +65,16 @@ public class RobotContainer {
   private final Driving m_driving = new Driving(m_dt, m_driver);
   private final ArmSwing m_swinging = new ArmSwing(m_arm, m_operator);
   private final Final_Auton_Drive m_auton_drive = new Final_Auton_Drive(d, 0, 0.5, 2);
-  private final rachet m_RachetComand = new rachet(m_Servo, m_operator);
+  private final openRac m_openRachet = new openRac(m_Servo, m_port);
+  private final closeRac m_closeRachet = new closeRac(m_Servo, m_port);
   private final last_try_auton plz_God = new last_try_auton(m_dt);
   private final pray_for_ramp ramp = new pray_for_ramp(m_dt);
   private final DriveToDistance m_dtd = new DriveToDistance(m_dt, 3.0);
   private final StrafeToDistance m_std = new StrafeToDistance(m_dt, ()-> 3.0);
   private final TurnToAngle m_tta = new TurnToAngle(m_dt, ()-> 90);
   private final drive_by_encoder m_d = new drive_by_encoder(m_dt, 2.0);
-
+  private final extension_auton m_extend = new extension_auton(m_arm, 10);
+  private final shoulder_auton mShoulder_auton = new shoulder_auton(m_arm);
   //private final Command plz = auto; 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -89,12 +97,18 @@ public class RobotContainer {
     //m_dt.setDefaultCommand(tuning);
     m_arm.setDefaultCommand(m_swinging);
     //m_Servo.setDefaultCommand(m_RachetComand);
+    
+
+    new JoystickButton(m_operator, Constants.XboxPortLB)
+      .whileTrue(m_openRachet);
+    new JoystickButton(m_operator, Constants.XboxPortRB)
+      .whileTrue(m_closeRachet);
 
     new JoystickButton(m_operator, Constants.XboxPortB)
-      .toggleOnTrue(m_take);
+      .whileTrue(m_take);
 
     new JoystickButton(m_operator, Constants.XboxPortX)
-      .toggleOnTrue(m_extake);
+      .whileTrue(m_extake);
 
     new JoystickButton(m_driver, Constants.XboxPortA)
       .toggleOnTrue(m_dtd);
@@ -104,7 +118,10 @@ public class RobotContainer {
 
     new JoystickButton(m_driver, Constants.XboxPortY)
       .toggleOnTrue(m_tta);
-
+    new JoystickButton(m_operator, Constants.XboxPortY)
+    .whileTrue(mShoulder_auton);
+    new JoystickButton(m_operator, Constants.XboxPortA)
+      .whileTrue(m_extend);
   }
 
   /**

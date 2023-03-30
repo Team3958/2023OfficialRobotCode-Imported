@@ -39,10 +39,10 @@ public class intake extends SubsystemBase {
   }
   public void Intaking(double speed){
     motor1.set(ControlMode.PercentOutput, speed);
-    motor2.set(ControlMode.PercentOutput, speed);
+    motor2.set(ControlMode.PercentOutput, -speed);
   }
   public void Extaking(double speed){
     motor1.set(ControlMode.PercentOutput, speed);
-    motor2.set(ControlMode.PercentOutput, speed);
+    motor2.set(ControlMode.PercentOutput, -speed);
   }
 }

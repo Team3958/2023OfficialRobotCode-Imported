@@ -15,12 +15,14 @@ package frc.robot;
 public final class Constants {
 
 //Xbox Constants
-    public static final int XboxPort = 1;
-    public static final int XboxPort2 = 2;
+    public static final int XboxPort = 0;
+    public static final int XboxPort2 = 1;
     public static final int XboxPortY = 4;
-    public static final int XboxPortA = 5;
+    public static final int XboxPortA = 1;
     public static final int XboxPortB = 2;
     public static final int XboxPortX = 3; 
+    public static final int XboxPortLB = 5;
+    public static final int XboxPortRB = 6;    
 
 //Drivetrain Constants
     public static final int backleft = 03;
@@ -35,8 +37,8 @@ public final class Constants {
 //Arm Constants
     public static final int shoulder1 = 5;
     public static final int shoulder2 = 6;
-    public static final int extend = 12;
-    public static final int wrist = 17;
+    public static final int extend = 17;
+    public static final int wrist = 170;
     public static final int intake1 = 4;
     public static final int intake2 = 2;
    
@@ -58,6 +60,8 @@ public final class Constants {
         // Wheel Gearing
         public static final double kGearRatio = 0.1;
         public static final double shoulder_gear_ratio = 0.0089285714; //  1/112
+        public static final double extend_gear_ratio = 0.11111111111111;//8/72
+
         public static final double should_range_of_motion = 105; //degrees
 
         // Speed Constraints
@@ -110,8 +114,9 @@ public final class Constants {
 
         public static final int startingLength = 0;
         public static final int RevPerMeter = 0;
-        public static final int ServoPort = 0;
+        public static final int ServoPort = 9;
         public static final double G_conpensate = 0.06; // tune this later
+        public static int arduinoAddress = 2;
            
 
 }

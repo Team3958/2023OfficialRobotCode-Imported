@@ -35,7 +35,7 @@ public class Driving extends CommandBase {
   @Override
   public void execute() {
 
-    dt.telop_drive(-xc.getLeftY(), xc.getLeftX(), xc.getRightX());
+    dt.telop_drive(-xc.getLeftY(), xc.getRightX(), /*xc.getRightX()*/ 0);
 
   }
 

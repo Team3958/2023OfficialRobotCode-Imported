@@ -34,6 +34,7 @@ public class intake extends SubsystemBase {
   private final void motorinit(TalonSRX motor, TalonSRXConfiguration config){
     motor.setNeutralMode(NeutralMode.Coast);
     motor.configAllSettings(config);
+    motor.configContinuousCurrentLimit(1);
   }
   public void Intaking(double speed){
     motor1.set(ControlMode.PercentOutput, speed);
