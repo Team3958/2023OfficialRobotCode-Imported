@@ -25,13 +25,13 @@ public class Extake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.Extaking(-0.6);
+    intake.Intaking(-0.6);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.Extaking(0);
+    intake.Intaking(0);
   }
 
   // Returns true when the command should end.

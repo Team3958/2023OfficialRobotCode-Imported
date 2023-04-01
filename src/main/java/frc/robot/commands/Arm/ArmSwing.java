@@ -35,7 +35,7 @@ public class ArmSwing extends CommandBase {
       Arm.move_shoulder(Math.pow(add_dead_zone(xc.getLeftY(), 0.12),2)*0.25);
     }
 
-    Arm.move_extend(xc.getRightY()*0.5);
+    Arm.move_extend(-xc.getRightY()*0.5);
   }
 
   

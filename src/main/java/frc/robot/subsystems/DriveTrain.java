@@ -123,7 +123,7 @@ MecanumDrive m_drive;
     
     //m_drive =  new MecanumDrive(frontleft, backleft, backright, frontright);
   
-    backleft.setInverted(true);
+    backleft.setInverted(false);
     frontleft.setInverted(true);
     
     fl = new ProfiledPIDController(Constants.fl_kP, Constants.fl_kI, Constants.fl_kD, new TrapezoidProfile.Constraints(4, 2));
@@ -216,7 +216,7 @@ public TalonFX get_fl_motor(){
   } 
 
   public void telop_drive(double x, double y, double z){
-    double fl_drive = x + y+ z;
+    double fl_drive = (x + y+ z);
     double fr_drive = x - y- z;
     double bl_drive = x - y+ z;
     double br_drive = x + y-z;
@@ -227,10 +227,10 @@ public TalonFX get_fl_motor(){
     bl_drive/=3;
     br_drive/=3;*/
 
-    /*fl_drive = MathUtil.clamp(fl_drive, -1, 1);
+    fl_drive = MathUtil.clamp(fl_drive, -1, 1);
     fr_drive = MathUtil.clamp(fr_drive, -1, 1);
     bl_drive = MathUtil.clamp(bl_drive, -1, 1);
-    br_drive = MathUtil.clamp(br_drive, -1, 1);*/
+    br_drive = MathUtil.clamp(br_drive, -1, 1);
 
 
     

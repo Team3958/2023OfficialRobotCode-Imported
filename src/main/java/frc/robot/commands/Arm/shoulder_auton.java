@@ -16,6 +16,8 @@ public class shoulder_auton extends CommandBase {
   private double tolerence = 0.07;
   private double startTicks;
   private final double max = 0.10;
+  int count;
+
   public shoulder_auton(arm a) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm =a;
@@ -26,6 +28,7 @@ public class shoulder_auton extends CommandBase {
   @Override
   public void initialize() {
     startTicks = arm.get_shoulder1_encoder();
+    count = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,18 +39,19 @@ public class shoulder_auton extends CommandBase {
     double output = max * error;
     output = MathUtil.clamp(output, -0.10, 0.10);
     arm.move_shoulder(output);
+    count +=1;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    arm.move_shoulder(-Constants.G_conpensate);
+    arm.move_shoulder(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (error< tolerence){
+    if (count == 150){
       return true;
     }
     return false;

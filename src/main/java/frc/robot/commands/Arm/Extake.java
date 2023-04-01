@@ -4,11 +4,14 @@
 
 package frc.robot.commands.Arm;
 
+import java.sql.Time;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm.intake;
+import frc.robot.subsystems.intake;
 
 public class Extake extends CommandBase {
   intake intake;
+  long startTIme;
   /** Creates a new Extake. */
   public Extake(intake i) {
 
@@ -20,12 +23,14 @@ public class Extake extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    startTIme = System.currentTimeMillis();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.Intaking(-0.35);
+    intake.Intaking(-0.45);
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +42,7 @@ public class Extake extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    
     return false;
   }
 }

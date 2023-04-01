@@ -25,12 +25,14 @@ public class drive_by_encoder extends CommandBase {
 
   private final double angleTolerance = 2;
   private double startAngle;
+  private double direction;
 
   private double tolerence = 0.07;
   public drive_by_encoder(DriveTrain d, double dis) {
     // Use addRequirements() here to declare subsystem dependencies.
     dt = d;
     dtt= dis;
+    direction = dis/Math.abs(dis);
     addRequirements(dt);
   }
 

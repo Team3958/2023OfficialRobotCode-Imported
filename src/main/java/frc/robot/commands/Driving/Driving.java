@@ -6,6 +6,7 @@ package frc.robot.commands.Driving;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -35,7 +36,7 @@ public class Driving extends CommandBase {
   @Override
   public void execute() {
 
-    dt.telop_drive(-xc.getLeftY(), xc.getRightX(), /*xc.getRightX()*/ 0);
+    dt.telop_drive(-add_dead_zone(xc.getLeftY(), 0.05), add_dead_zone(xc.getRightX(), 0.05), add_dead_zone(xc.getLeftX() , 0.05));
 
   }
 
@@ -43,6 +44,17 @@ public class Driving extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     dt.telop_drive(0, 0, 0);
+  }
+
+  private double add_dead_zone(double input, double dead){
+    double newRange = 1-dead;
+    double direction = input/Math.abs(input);
+    if (Math.abs(input) < dead){
+      return 0;
+    }
+    input = (Math.abs(input)-dead) * direction/ newRange;
+    input = MathUtil.clamp(input, -1, 1);
+    return input;
   }
 
   // Returns true when the command should end.

@@ -15,8 +15,8 @@ package frc.robot;
 public final class Constants {
 
 //Xbox Constants
-    public static final int XboxPort = 0;
-    public static final int XboxPort2 = 1;
+    public static final int XboxPort = 1;
+    public static final int XboxPort2 = 2;
     public static final int XboxPortY = 4;
     public static final int XboxPortA = 1;
     public static final int XboxPortB = 2;
@@ -25,10 +25,10 @@ public final class Constants {
     public static final int XboxPortRB = 6;    
 
 //Drivetrain Constants
-    public static final int backleft = 03;
+    public static final int backleft = 13;
     public static final int frontright = 20;
     public static final int backright = 22;
-    public static final int frontleft = 01;
+    public static final int frontleft = 03;
     public static final double kF = 0;
     public static final double kP = 0;
     public static final double kI = 0;
@@ -120,3 +120,10 @@ public final class Constants {
            
 
 }
+/*Mid cube measure
+    18.5 in robot frame inside to cune score
+        frame is 1 inch
+    arm extend 18 inchs
+    shoulder should be tuned by then
+
+*/ 

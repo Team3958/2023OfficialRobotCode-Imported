@@ -16,11 +16,14 @@ import frc.robot.commands.Take;
 import frc.robot.commands.last_try_auton;
 import frc.robot.commands.pray_for_ramp;
 import frc.robot.commands.Arm.ArmSwing;
+import frc.robot.commands.Arm.auton_extake;
 import frc.robot.commands.Arm.closeRac;
 import frc.robot.commands.Arm.extension_auton;
+import frc.robot.commands.Arm.low_cube;
 import frc.robot.commands.Arm.openRac;
 import frc.robot.commands.Arm.rachetOpen;
 import frc.robot.commands.Arm.shoulder_auton;
+import frc.robot.commands.AutonRoutines.just_taxi;
 import frc.robot.commands.Driving.DriveToDistance;
 import frc.robot.commands.Driving.Driving;
 import frc.robot.commands.Driving.StrafeToDistance;
@@ -75,6 +78,11 @@ public class RobotContainer {
   private final drive_by_encoder m_d = new drive_by_encoder(m_dt, 2.0);
   private final extension_auton m_extend = new extension_auton(m_arm, 10);
   private final shoulder_auton mShoulder_auton = new shoulder_auton(m_arm);
+  private final just_taxi m_taxi = new just_taxi(m_dt);
+  private final low_cube m_lowCube = new low_cube(m_arm, m_intake, m_dt);
+  private final auton_extake m_ex = new auton_extake(m_intake);
+
+
   //private final Command plz = auto; 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -131,6 +139,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_tta;
+    return m_lowCube;
   }
 }
