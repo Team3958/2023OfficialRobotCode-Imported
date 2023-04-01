@@ -51,15 +51,15 @@ public class drive_by_encoder extends CommandBase {
   @Override
   public void execute() {
 
-    double fl_ticks_traveled = dt.get_fl_encoder()-fl_start;
-    double fr_ticks_traveled = dt.get_fr_encoder()-fr_start;
-    double bl_ticks_traveled = dt.get_bl_encoder()-bl_start;
-    double br_ticks_traveled = dt.get_br_encoder()-br_start;
+    double fl_ticks_traveled = Math.abs(dt.get_fl_encoder()-fl_start);
+    double fr_ticks_traveled = Math.abs(dt.get_fr_encoder()-fr_start);
+    double bl_ticks_traveled = Math.abs(dt.get_bl_encoder()-bl_start);
+    double br_ticks_traveled = Math.abs(dt.get_br_encoder()-br_start);
 
-    fl_error = ((dtt-dt.tick_to_distance(fl_ticks_traveled))/dtt);
-    fr_error = ((dtt-dt.tick_to_distance(fr_ticks_traveled))/dtt);
-    bl_error = ((dtt-dt.tick_to_distance(bl_ticks_traveled))/dtt);
-    br_error = ((dtt-dt.tick_to_distance(br_ticks_traveled))/dtt);
+    fl_error = Math.abs((dtt-dt.tick_to_distance(fl_ticks_traveled))/dtt);
+    fr_error = Math.abs(dtt-dt.tick_to_distance(fr_ticks_traveled)/dtt);
+    bl_error = Math.abs((dtt-dt.tick_to_distance(bl_ticks_traveled))/dtt);
+    br_error = Math.abs((dtt-dt.tick_to_distance(br_ticks_traveled))/dtt);
 
     double flmotorOutput = 0.6;
     double blmotorOutput = 0.6;
@@ -67,27 +67,27 @@ public class drive_by_encoder extends CommandBase {
     double brmotorOutput = 0.6;
 
     if(fl_error<=1 && fl_error > 0.8) {
-      flmotorOutput = 1*(1-fl_error) + 0.4; 
+      flmotorOutput = direction*((1-fl_error) + 0.4); 
     } else if (fl_error<0.25) {
-      flmotorOutput = 1.4*fl_error + 0.25; 
+      flmotorOutput = direction*(1.4*fl_error + 0.25); 
     }
 
     if(bl_error<=1 && bl_error > 0.8) {
-      blmotorOutput = 1*(1-bl_error) + 0.4; 
+      blmotorOutput = direction*((1-bl_error) + 0.4); 
     } else if (bl_error<0.25) {
-      blmotorOutput = 1.4*bl_error + 0.25; 
+      blmotorOutput = direction*(1.4*bl_error + 0.25); 
     }
 
     if(fr_error<=1 && fr_error > 0.8) {
-      frmotorOutput = 1*(1-fr_error) + 0.4; 
+      frmotorOutput = direction* (1*(1-fr_error) + 0.4); 
     } else if (fr_error<0.25) {
-      frmotorOutput = 1.4*fr_error + 0.25; 
+      frmotorOutput = direction*(1.4*fr_error + 0.25); 
     }
 
     if(br_error<=1 && br_error > 0.8) {
-      brmotorOutput = 1*(1-br_error) + 0.4; 
+      brmotorOutput =direction*(1*(1-br_error) + 0.4); 
     } else if (br_error<0.25) {
-      brmotorOutput = 1.4*br_error + 0.25; 
+      brmotorOutput = direction* (1.4*br_error + 0.25); 
     }
 
     double angleOffset = dt.getAngle()- startAngle;
@@ -102,10 +102,10 @@ public class drive_by_encoder extends CommandBase {
     }
 
 
-    MathUtil.clamp(flmotorOutput, -0.6, 0.65);
-    MathUtil.clamp(frmotorOutput, -0.6, 0.65);
-    MathUtil.clamp(blmotorOutput, -0.6, 0.65);
-    MathUtil.clamp(brmotorOutput, -0.6, 0.65);
+    MathUtil.clamp(flmotorOutput, -0.6, 0.6);
+    MathUtil.clamp(frmotorOutput, -0.6, 0.6);
+    MathUtil.clamp(blmotorOutput, -0.6, 0.6);
+    MathUtil.clamp(brmotorOutput, -0.6, 0.6);
 
     dt.drive_by_percent(flmotorOutput, frmotorOutput, blmotorOutput, brmotorOutput);
   }
